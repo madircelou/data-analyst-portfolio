@@ -7,25 +7,19 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- STYLE GLOBAL ---------------- #
+# ---------------- STYLE ---------------- #
 
 st.markdown("""
 <style>
-
-/* supprimer header streamlit */
 
 header {visibility:hidden;}
 footer {visibility:hidden;}
 #MainMenu {visibility:hidden;}
 
-/* fond */
-
 .stApp{
 background-color:#f4f1ed;
 color:#2f2f2f;
 }
-
-/* titre */
 
 .name{
 font-size:70px;
@@ -41,8 +35,6 @@ font-size:22px;
 color:#6b6b6b;
 margin-bottom:40px;
 }
-
-/* timeline */
 
 .timeline{
 display:flex;
@@ -65,8 +57,6 @@ font-size:40px;
 text-align:center;
 }
 
-/* tools */
-
 .section{
 margin-top:60px;
 }
@@ -86,8 +76,6 @@ page = st.sidebar.radio(
 # =====================================================
 
 if page == "Accueil":
-
-    # TITRE
 
     st.markdown('<div class="name">Elodie Marcouire</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle">Portfolio Data Analyst</div>', unsafe_allow_html=True)
@@ -153,13 +141,33 @@ Pour moi la data c'est un peu de la **magie** : on part de quelque chose de brou
 Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des questions et trouver des insights qui permettent de mieux comprendre les problèmes.
 """)
 
-    # radar chart tools
+# ---------------- TOOLS RADAR ---------------- #
 
     with col2:
 
         tools = pd.DataFrame({
-            "tool":["Python","SQL","Power BI","Excel","R"],
-            "score":[4,4,3,3,2]
+            "tool":[
+                "Python",
+                "SQL",
+                "Power BI",
+                "Excel",
+                "Talend",
+                "Snowflake",
+                "DataGalaxy",
+                "Confluence",
+                "R"
+            ],
+            "score":[
+                3,
+                4,
+                4,
+                3,
+                3,
+                3,
+                2,
+                2,
+                2
+            ]
         })
 
         fig = px.line_polar(
@@ -172,9 +180,18 @@ Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des qu
         fig.update_traces(fill='toself')
 
         fig.update_layout(
+
             showlegend=False,
+
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+
             polar=dict(
-                bgcolor="rgba(0,0,0,0)"
+                bgcolor="rgba(0,0,0,0)",
+                radialaxis=dict(
+                    visible=True,
+                    range=[0,4]
+                )
             )
         )
 
@@ -200,8 +217,6 @@ Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des qu
 elif page == "Projets":
 
     st.title("Projets")
-
-    st.write("Les projets data seront présentés ici.")
 
 # =====================================================
 # VOYAGES
@@ -243,5 +258,3 @@ elif page == "Voyages":
 elif page == "Expérimentations":
 
     st.title("Expérimentations")
-
-    st.write("Des analyses exploratoires seront ajoutées ici.")
