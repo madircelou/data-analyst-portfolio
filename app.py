@@ -1,71 +1,58 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 st.set_page_config(
     page_title="Elodie Marcouire | Data Portfolio",
     layout="wide"
 )
 
-# -------- STYLE -------- #
+# ---------------- STYLE ---------------- #
 
 st.markdown("""
 <style>
 
-/* Background général */
 .stApp {
-    background-color: #fafafa;
+    background-color:#f4f1ed;
+    color:#2f2f2f;
 }
 
-/* Titres */
-
 .big-title {
-font-size:64px;
+font-size:60px;
 font-weight:700;
-margin-bottom:10px;
 }
 
 .subtitle {
-font-size:28px;
-color:#6b7280;
+font-size:24px;
+color:#8b5e3c;
 margin-bottom:40px;
 }
-
-/* texte général */
-
-p, li {
-font-size:18px;
-}
-
-/* sections */
 
 .section {
 margin-top:70px;
 }
 
-/* KPI */
-
 .kpi-card {
-background-color:white;
+background:white;
 padding:30px;
-border-radius:16px;
+border-radius:15px;
 text-align:center;
-box-shadow:0 4px 12px rgba(0,0,0,0.06);
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }
 
 .kpi-number {
-font-size:42px;
+font-size:40px;
 font-weight:700;
+color:#8b5e3c;
 }
 
 .kpi-label {
-color:#6b7280;
 font-size:18px;
+color:#555;
 }
 
-/* timeline */
-
 .timeline {
-border-left: 3px solid #2563eb;
+border-left:4px solid #8b5e3c;
 padding-left:25px;
 margin-top:20px;
 }
@@ -78,81 +65,95 @@ font-size:18px;
 </style>
 """, unsafe_allow_html=True)
 
-# -------- HEADER -------- #
+# ---------------- NAVIGATION ---------------- #
 
-st.markdown('<div class="big-title">Elodie Marcouire</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Data Analyst Portfolio</div>', unsafe_allow_html=True)
+page = st.sidebar.radio(
+    "Navigation",
+    ["Home","Projects","Travel Map","Data Experiments"]
+)
 
-# -------- ABOUT ME -------- #
+# =====================================================
+# HOME
+# =====================================================
 
-col1, col2 = st.columns([1,2])
+if page == "Home":
 
-with col1:
+    st.markdown('<div class="big-title">Elodie Marcouire</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">Data Analyst Portfolio</div>', unsafe_allow_html=True)
 
-    try:
-        st.image("photo.jpg", width=250)
-    except:
-        st.write("📷 Photo coming soon")
+    col1, col2 = st.columns([1,2])
 
-with col2:
+    with col1:
 
-    st.markdown("""
+        try:
+            st.image("photo.jpg", width=250)
+        except:
+            st.write("📷 Photo coming soon")
+
+    with col2:
+
+        st.markdown("""
 ### About me
 
 Data analyst en alternance issue d’une formation en **Mathématiques & Informatique appliquées aux Sciences Sociales**.
 
-Je travaille sur l'analyse et l'exploitation de données pour aider à la **prise de décision**, créer des **dashboards**, et transformer les données en **insights utiles**.
+Je travaille sur l’analyse et l’exploitation de données pour aider à la **prise de décision**, créer des **dashboards**, et transformer les données en **insights utiles**.
 
 J’aime explorer les données, comprendre les phénomènes et créer des visualisations simples et efficaces.
 
-**Tools:** Python | SQL | Power BI | Excel
+**Tools**
+
+Python  
+SQL  
+Power BI  
+Excel
 """)
 
-# -------- KPI -------- #
+# ---------------- KPI ---------------- #
 
-st.markdown('<div class="section"></div>', unsafe_allow_html=True)
-st.subheader("About me in numbers")
+    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+    st.subheader("About me in numbers")
 
-k1, k2, k3, k4 = st.columns(4)
+    k1,k2,k3,k4 = st.columns(4)
 
-with k1:
+    with k1:
+        st.markdown("""
+        <div class="kpi-card">
+        <div class="kpi-number">4</div>
+        <div class="kpi-label">Years studying data</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with k2:
+        st.markdown("""
+        <div class="kpi-card">
+        <div class="kpi-number">15+</div>
+        <div class="kpi-label">Dashboards built</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with k3:
+        st.markdown("""
+        <div class="kpi-card">
+        <div class="kpi-number">20+</div>
+        <div class="kpi-label">Datasets explored</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with k4:
+        st.markdown("""
+        <div class="kpi-card">
+        <div class="kpi-number">3</div>
+        <div class="kpi-label">Languages spoken</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ---------------- JOURNEY ---------------- #
+
+    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+    st.subheader("My Journey")
+
     st.markdown("""
-    <div class="kpi-card">
-    <div class="kpi-number">4</div>
-    <div class="kpi-label">Years studying data</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with k2:
-    st.markdown("""
-    <div class="kpi-card">
-    <div class="kpi-number">15+</div>
-    <div class="kpi-label">Dashboards built</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with k3:
-    st.markdown("""
-    <div class="kpi-card">
-    <div class="kpi-number">20+</div>
-    <div class="kpi-label">Datasets explored</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with k4:
-    st.markdown("""
-    <div class="kpi-card">
-    <div class="kpi-number">3</div>
-    <div class="kpi-label">Languages spoken</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-# -------- JOURNEY -------- #
-
-st.markdown('<div class="section"></div>', unsafe_allow_html=True)
-st.subheader("My Journey")
-
-st.markdown("""
 <div class="timeline">
 
 <div class="timeline-item">
@@ -167,31 +168,81 @@ Parcours Economie et Gestion
 </div>
 
 <div class="timeline-item">
-<b>2024 - Aujourd'hui</b> – Data Analyst (Alternance)  
-Analyse de données internes  
-Création de dashboards et reporting automatisés  
-Nettoyage et structuration de bases de données
+<b>2024 - Aujourd'hui</b> – Data Analyst (Alternance)
 </div>
 
 </div>
 """, unsafe_allow_html=True)
 
-# -------- DATA VIZ -------- #
+# ---------------- DATA VIZ ---------------- #
 
-st.markdown('<div class="section"></div>', unsafe_allow_html=True)
-st.subheader("About me in data")
+    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+    st.subheader("About me in data")
 
-data = {
-    "Metric": [
-        "Years studying data",
-        "Dashboards built",
-        "Datasets explored",
-        "Countries visited",
-        "Books read per year"
-    ],
-    "Value": [4, 15, 20, 10, 12]
-}
+    df = pd.DataFrame({
+        "Category":[
+            "Years studying data",
+            "Dashboards built",
+            "Datasets explored",
+            "Countries visited",
+            "Books per year"
+        ],
+        "Value":[4,15,20,10,12]
+    })
 
-df = pd.DataFrame(data)
+    fig = px.bar(
+        df,
+        x="Value",
+        y="Category",
+        orientation="h",
+        color="Value",
+        color_continuous_scale="Brwnyl"
+    )
 
-st.bar_chart(df.set_index("Metric"))
+    st.plotly_chart(fig,use_container_width=True)
+
+# =====================================================
+# PROJECTS
+# =====================================================
+
+elif page == "Projects":
+
+    st.title("Data Projects")
+
+    st.write("Some of my data explorations and projects.")
+
+    st.markdown("### Example project")
+
+    st.write("""
+Airbnb price analysis in European cities.
+
+Goal:
+- understand pricing differences
+- explore geographic effects
+""")
+
+# =====================================================
+# TRAVEL MAP
+# =====================================================
+
+elif page == "Travel Map":
+
+    st.title("Travel Analytics")
+
+    travel = pd.DataFrame({
+        "city":["Lisbon","Rome","Barcelona","Amsterdam"],
+        "lat":[38.72,41.90,41.38,52.37],
+        "lon":[-9.13,12.49,2.17,4.89]
+    })
+
+    st.map(travel)
+
+# =====================================================
+# DATA EXPERIMENTS
+# =====================================================
+
+elif page == "Data Experiments":
+
+    st.title("Data Experiments")
+
+    st.write("Small analyses and experiments with datasets.")
