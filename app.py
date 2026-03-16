@@ -1,68 +1,138 @@
 import streamlit as st
 import pandas as pd
 
-# Page configuration
 st.set_page_config(
     page_title="Elodie Marcouire | Data Portfolio",
     layout="wide"
 )
 
-# CSS styling
+# -------- STYLE -------- #
+
 st.markdown("""
 <style>
 
-.presentation {
-    background-color: #f5f7fb;
-    padding:40px;
-    border-radius:10px;
+body {
+background-color: #ffffff;
+}
+
+.big-title {
+font-size:50px;
+font-weight:700;
+}
+
+.subtitle {
+font-size:22px;
+color:grey;
+margin-bottom:40px;
+}
+
+.section {
+margin-top:60px;
+}
+
+.kpi-card {
+background-color:#f6f7fb;
+padding:25px;
+border-radius:12px;
+text-align:center;
+}
+
+.kpi-number {
+font-size:35px;
+font-weight:700;
+}
+
+.kpi-label {
+color:grey;
 }
 
 .timeline {
-    border-left: 3px solid #4A90E2;
-    padding-left:20px;
-    margin-top:20px;
+border-left: 3px solid #4A90E2;
+padding-left:20px;
+margin-top:20px;
 }
 
 .timeline-item {
-    margin-bottom:20px;
+margin-bottom:20px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
+# -------- HEADER -------- #
 
-# TITLE
-st.title("Elodie Marcouire")
-st.subheader("Data Analyst Portfolio")
+st.markdown('<div class="big-title">Elodie Marcouire</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Data Analyst Portfolio</div>', unsafe_allow_html=True)
 
-
-# PRESENTATION SECTION
-st.markdown('<div class="presentation">', unsafe_allow_html=True)
+# -------- ABOUT ME -------- #
 
 col1, col2 = st.columns([1,2])
 
 with col1:
-    st.image("photo.jpg", width=220)
+
+    try:
+        st.image("photo.jpg", width=220)
+    except:
+        st.write("📷 Photo coming soon")
 
 with col2:
+
     st.markdown("""
 ### About me
 
-Data analyst en alternance, issue d’une formation en **Mathématiques & Informatique appliquées aux Sciences Sociales**.
+Data analyst en alternance issue d’une formation en **Mathématiques & Informatique appliquées aux Sciences Sociales**.
 
-Je travaille sur l’analyse et l’exploitation de données afin d’aider à la prise de décision.  
-Je développe des **tableaux de bord**, j’analyse des datasets et je transforme les données en **insights exploitables**.
+Je travaille sur l'analyse et l'exploitation de données pour aider à la **prise de décision**, créer des **dashboards**, et transformer les données en **insights utiles**.
 
-J’aime particulièrement comprendre les phénomènes à travers la data et créer des visualisations claires et utiles.
+J’aime explorer les données, comprendre les phénomènes et créer des visualisations simples et efficaces.
 
 **Tools:** Python | SQL | Power BI | Excel
 """)
 
-st.markdown('</div>', unsafe_allow_html=True)
+# -------- KPI DASHBOARD -------- #
+
+st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+st.subheader("About me in numbers")
+
+kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+
+with kpi1:
+    st.markdown("""
+    <div class="kpi-card">
+    <div class="kpi-number">4</div>
+    <div class="kpi-label">Years studying data</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with kpi2:
+    st.markdown("""
+    <div class="kpi-card">
+    <div class="kpi-number">15+</div>
+    <div class="kpi-label">Dashboards built</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with kpi3:
+    st.markdown("""
+    <div class="kpi-card">
+    <div class="kpi-number">20+</div>
+    <div class="kpi-label">Datasets explored</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with kpi4:
+    st.markdown("""
+    <div class="kpi-card">
+    <div class="kpi-number">3</div>
+    <div class="kpi-label">Languages spoken</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
-# TIMELINE
-st.header("My Journey")
+# -------- JOURNEY -------- #
+
+st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+st.subheader("My Journey")
 
 st.markdown("""
 <div class="timeline">
@@ -74,7 +144,7 @@ Spécialité Mathématiques (Mention Bien)
 
 <div class="timeline-item">
 <b>2020 - 2024</b> – Université de Bordeaux  
-Licence Mathématiques & Informatique appliquées aux Sciences Humaines & Sociales  
+Licence Mathématiques & Informatique appliquées aux Sciences Sociales  
 Parcours Economie et Gestion
 </div>
 
@@ -88,9 +158,10 @@ Nettoyage et structuration de bases de données
 </div>
 """, unsafe_allow_html=True)
 
+# -------- DATA VIZ -------- #
 
-# ABOUT ME IN DATA
-st.header("About me in data")
+st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+st.subheader("About me in data")
 
 data = {
     "Metric": [
