@@ -1,7 +1,9 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Elodie Marcouire | Portfolio",
@@ -325,60 +327,117 @@ if page == "Accueil":
     st.markdown('<div class="section-label">Parcours</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-title">Ma trajectoire</div>', unsafe_allow_html=True)
 
-    st.markdown("""
-    <div class="timeline-container">
+    components.html("""
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --cream: #f4f1ed;
+        --ink:   #1c1c1c;
+        --muted: #7a7a7a;
+        --coral: #d95f4b;
+        --sage:  #7a9e7e;
+      }
+      body { margin:0; background: var(--cream); }
+      .tl {
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+        padding: 10px 4px 24px;
+      }
+      .tl-item {
+        flex: 1;
+        min-width: 155px;
+        position: relative;
+        padding: 24px 12px 16px;
+        box-sizing: border-box;
+      }
+      .tl-item::before {
+        content: "";
+        position: absolute;
+        top: 17px; left: 0; right: 0;
+        height: 2px;
+        background: #d9d5cf;
+      }
+      .tl-item:first-child::before { left: 50%; }
+      .tl-item:last-child::before  { right: 50%; }
+      .tl-dot {
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        background: var(--coral);
+        border: 3px solid var(--cream);
+        box-shadow: 0 0 0 2px var(--coral);
+        margin: 0 auto 16px;
+        position: relative;
+        z-index: 1;
+      }
+      .tl-item.current .tl-dot { background: var(--sage); box-shadow: 0 0 0 2px var(--sage); }
+      .tl-item.future  .tl-dot { background: transparent; border: 3px solid #ccc; box-shadow: 0 0 0 2px #ccc; }
+      .tl-year {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px; font-weight: 700;
+        color: var(--ink);
+        text-align: center; margin-bottom: 5px;
+      }
+      .tl-item.current .tl-year { color: var(--sage); }
+      .tl-item.future  .tl-year { color: var(--muted); font-style: italic; }
+      .tl-role {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px; font-weight: 500;
+        color: var(--ink);
+        text-align: center; margin-bottom: 4px;
+      }
+      .tl-detail {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 11px; color: var(--muted);
+        text-align: center; line-height: 1.55;
+      }
+    </style>
 
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">2002</div>
-            <div class="timeline-role">Naissance</div>
-            <div class="timeline-detail">Entre deux pays,<br>une enfance nomade commence</div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">2002–18</div>
-            <div class="timeline-role">Maroc · Mauritanie · Sénégal</div>
-            <div class="timeline-detail">Grandir entre cultures,<br>apprendre à lire les contextes</div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">2020</div>
-            <div class="timeline-role">Bac ES</div>
-            <div class="timeline-detail">Spécialité Mathématiques<br>mention obtenue</div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">2020</div>
-            <div class="timeline-role">Bordeaux</div>
-            <div class="timeline-detail">Licence MIASHS<br>Université de Bordeaux</div>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">2023</div>
-            <div class="timeline-role">Premiers dashboards</div>
-            <div class="timeline-detail">Power BI · SQL · Python<br>La donnée comme langage</div>
-        </div>
-
-        <div class="timeline-item current">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">2024 →</div>
-            <div class="timeline-role">Alternante Data Analyst</div>
-            <div class="timeline-detail">Domofrance<br>Snowflake · Talend · DataGalaxy</div>
-        </div>
-
-        <div class="timeline-item future">
-            <div class="timeline-dot"></div>
-            <div class="timeline-year">2025+</div>
-            <div class="timeline-role">What's next?</div>
-            <div class="timeline-detail">La suite est<br>encore à écrire ✦</div>
-        </div>
-
+    <div class="tl">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2002</div>
+        <div class="tl-role">Naissance</div>
+        <div class="tl-detail">Entre deux pays,<br>une enfance nomade</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2002–18</div>
+        <div class="tl-role">Maroc · Mauritanie · Sénégal</div>
+        <div class="tl-detail">Grandir entre cultures,<br>lire les contextes</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2020</div>
+        <div class="tl-role">Bac ES</div>
+        <div class="tl-detail">Spécialité Mathématiques<br>mention obtenue</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2020</div>
+        <div class="tl-role">Bordeaux</div>
+        <div class="tl-detail">Licence MIASHS<br>Université de Bordeaux</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2023</div>
+        <div class="tl-role">Premiers dashboards</div>
+        <div class="tl-detail">Power BI · SQL · Python<br>La donnée comme langage</div>
+      </div>
+      <div class="tl-item current">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2024 →</div>
+        <div class="tl-role">Alternante Data Analyst</div>
+        <div class="tl-detail">Domofrance<br>Snowflake · Talend · DataGalaxy</div>
+      </div>
+      <div class="tl-item future">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2025+</div>
+        <div class="tl-role">What's next?</div>
+        <div class="tl-detail">La suite est<br>encore à écrire ✦</div>
+      </div>
     </div>
-    """, unsafe_allow_html=True)
+    """, height=170)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
