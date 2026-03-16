@@ -96,20 +96,18 @@ if page == "Home":
         except:
             st.write("📷 Photo coming soon")
 
-    with col2:
-        st.markdown("""
+ with col2:
+    st.markdown("""
 ### About me
 
-Data analyst with a background in **Mathematics & Applied Data Analysis**.
+Nice to meet you!  
 
-I enjoy exploring datasets, building dashboards and transforming complex data into **clear insights that support decision-making**.
+Currently working as a **Data Analyst apprentice**, I am constantly looking for new problems to explore.
 
-**Tools**
+Curious and motivated, I love playing with data and trying to understand what it hides.  
+For me, data analysis is a bit like **magic**: you start with something messy, and little by little patterns appear and solutions emerge.
 
-Python  
-SQL  
-Power BI  
-Excel
+What I enjoy the most is exploring datasets, asking questions, and turning raw data into insights that help make decisions.
 """)
 
 # ---------------- KPI ---------------- #
