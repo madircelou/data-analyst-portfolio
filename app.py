@@ -122,6 +122,23 @@ section[data-testid="stSidebarNav"] { display: none; }
     font-size: 15px; color: var(--muted);
     max-width: 600px; margin-bottom: 24px; line-height: 1.7;
 }
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 768px) {
+  .block-container {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  .navbar { padding: 0 16px !important; }
+  .navbar-logo { font-size: 14px !important; }
+  .navbar-links { gap: 16px !important; }
+  .navbar-links a { font-size: 9px !important; letter-spacing: 0.1em !important; }
+  .hero-wrap { padding: 40px 12px 16px !important; }
+  .hero-name { font-size: clamp(36px, 10vw, 64px) !important; }
+  .hero-subtitle { font-size: 11px !important; letter-spacing: 0.15em !important; }
+  .bio-card { padding: 24px 20px !important; font-size: 14px !important; }
+  .section-title { font-size: 24px !important; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -402,44 +419,239 @@ if page == "Accueil":
         </script>
         """, height=320)
 
-    # ── STATS ─────────────────────────────────
+    # ── MINI DASHBOARD ────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown('<div class="section-label">En chiffres</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">Ce que disent les données</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label">Mon tableau de bord</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">En chiffres</div>', unsafe_allow_html=True)
 
     components.html("""
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <style>
       * { box-sizing:border-box; margin:0; padding:0; }
-      body { background: transparent; }
-      .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-      .card {
-        background:#fff; border-radius:12px;
-        padding:28px 16px; text-align:center;
-        box-shadow:0 2px 12px rgba(0,0,0,0.05);
-        border-top:3px solid #d95f4b;
+      html,body { background:#f4f1ed; font-family:'DM Sans',sans-serif; }
+
+      .db-wrap { border-radius:12px; overflow:hidden; box-shadow:0 4px 28px rgba(0,0,0,0.1); }
+
+      /* Header */
+      .db-header {
+        background:#1c1c1c; padding:14px 22px;
+        display:flex; align-items:center; justify-content:space-between;
       }
-      .card:nth-child(2){border-color:#7a9e7e;}
-      .card:nth-child(3){border-color:#c9a84c;}
-      .card:nth-child(4){border-color:#9b8fcf;}
-      .num {
-        font-family:'Playfair Display',serif;
-        font-size:44px; font-weight:700;
-        color:#1c1c1c; line-height:1; margin-bottom:10px;
+      .db-title { font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:white; }
+      .db-badge {
+        font-size:9px; font-weight:500; letter-spacing:0.15em; text-transform:uppercase;
+        background:rgba(217,95,75,0.25); color:#d95f4b;
+        padding:4px 10px; border-radius:20px; border:1px solid rgba(217,95,75,0.4);
       }
-      .lbl {
-        font-family:'DM Sans',sans-serif;
-        font-size:11px; letter-spacing:0.12em;
-        text-transform:uppercase; color:#7a7a7a;
+
+      /* KPI strip */
+      .kpi-strip {
+        display:grid; grid-template-columns:repeat(4,1fr);
+        gap:1px; background:#e0dcd6;
+        border-left:1px solid #e0dcd6; border-right:1px solid #e0dcd6;
+      }
+      .kpi { background:#fff; padding:14px 16px; }
+      .kpi-label {
+        font-size:9px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase;
+        color:#7a7a7a; margin-bottom:6px;
+      }
+      .kpi-value {
+        font-family:'Playfair Display',serif; font-size:26px; font-weight:700;
+        color:#1c1c1c; line-height:1; margin-bottom:4px;
+      }
+      .kpi-delta { font-size:10px; font-weight:500; }
+      .kpi-delta.up   { color:#d95f4b; }
+      .kpi-delta.down { color:#7a9e7e; }
+      .kpi-delta.neu  { color:#7a7a7a; }
+      .kpi-ref { font-size:9px; color:#bbb; margin-left:4px; }
+
+      /* Charts grid */
+      .charts-grid {
+        display:grid; grid-template-columns:5fr 7fr;
+        gap:1px; background:#e0dcd6;
+        border:1px solid #e0dcd6; border-top:1px solid #e0dcd6;
+      }
+      .chart-panel { background:#fff; padding:16px 16px 12px; }
+      .panel-title {
+        font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase;
+        color:#7a7a7a; margin-bottom:12px;
+      }
+      .canvas-h { position:relative; width:100%; height:200px; }
+
+      /* Legend row */
+      .legend-row {
+        background:#fff; border:1px solid #e0dcd6; border-top:none;
+        padding:8px 16px; display:flex; gap:16px; flex-wrap:wrap; align-items:center;
+      }
+      .leg-item { display:flex; align-items:center; gap:5px; font-size:9px; color:#555; }
+      .leg-dot  { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+      /* Footer */
+      .db-footer {
+        background:#fff; border:1px solid #e0dcd6; border-top:none;
+        border-radius:0 0 12px 12px; padding:8px 16px;
+        display:flex; justify-content:space-between;
+        font-size:9px; color:#bbb; letter-spacing:0.05em;
+      }
+
+      @media(max-width:560px) {
+        .kpi-strip   { grid-template-columns:repeat(2,1fr); }
+        .charts-grid { grid-template-columns:1fr; }
+        .kpi-value   { font-size:20px; }
       }
     </style>
-    <div class="grid">
-      <div class="card"><div class="num">4</div><div class="lbl">Années dans la data</div></div>
-      <div class="card"><div class="num">15+</div><div class="lbl">Dashboards réalisés</div></div>
-      <div class="card"><div class="num">20+</div><div class="lbl">Datasets explorés</div></div>
-      <div class="card"><div class="num">9</div><div class="lbl">Pays visités</div></div>
+
+    <div class="db-wrap">
+
+      <!-- Header -->
+      <div class="db-header">
+        <span class="db-title">Tableau de bord · E. Marcouire</span>
+        <span class="db-badge">Portfolio Data Analyst</span>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-strip">
+        <div class="kpi">
+          <div class="kpi-label">Expérience data</div>
+          <div class="kpi-value">4 ans</div>
+          <div class="kpi-delta neu">depuis 2020 <span class="kpi-ref">(M-1: 3 ans)</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Dashboards livrés</div>
+          <div class="kpi-value">15 +</div>
+          <div class="kpi-delta down">↑ +3 cette année <span class="kpi-ref">vs N-1</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Datasets explorés</div>
+          <div class="kpi-value">20 +</div>
+          <div class="kpi-delta down">dont 8 en prod <span class="kpi-ref">↑ +2</span></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Pays visités</div>
+          <div class="kpi-value">9</div>
+          <div class="kpi-delta up">↗ prochain : TBD <span class="kpi-ref"></span></div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+
+        <!-- Horizontal bar : répartition compétences -->
+        <div class="chart-panel">
+          <div class="panel-title">Répartition compétences · niveau /10</div>
+          <div class="canvas-h"><canvas id="hbar"></canvas></div>
+        </div>
+
+        <!-- Stacked bar + line : projets dans le temps -->
+        <div class="chart-panel">
+          <div class="panel-title">Dashboards livrés par trimestre · avec taux de complexité</div>
+          <div class="canvas-h"><canvas id="stacked"></canvas></div>
+        </div>
+
+      </div>
+
+      <!-- Legend -->
+      <div class="legend-row">
+        <div class="leg-item"><div class="leg-dot" style="background:#d95f4b;"></div>SQL / Power BI (core)</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#7a9e7e;"></div>Snowflake / Talend</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#c9a84c;"></div>Python / Excel</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#9b8fcf;"></div>R / Autres</div>
+        <div class="leg-item"><div class="leg-dot" style="background:none;border:2px solid #d95f4b;border-radius:50%;"></div>— Taux complexité</div>
+      </div>
+
+      <!-- Footer -->
+      <div class="db-footer">
+        <span>Domofrance · Bordeaux · Snowflake · Power BI · Python · SQL</span>
+        <span>Données indicatives &nbsp;·&nbsp; 16/03/2026</span>
+      </div>
+
     </div>
-    """, height=140)
+
+    <script>
+    // Horizontal bar — compétences
+    new Chart(document.getElementById('hbar'), {
+      type: 'bar',
+      data: {
+        labels: ['SQL','Power BI','Python','Snowflake','Excel','Talend','R'],
+        datasets: [{
+          data: [8.5, 8, 7, 7, 7, 6.5, 5],
+          backgroundColor: ['#d95f4b','#d95f4b','#c9a84c','#7a9e7e','#c9a84c','#7a9e7e','#9b8fcf'],
+          borderRadius: 4,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { min:0, max:10, grid:{color:'#f4f1ed'}, ticks:{font:{size:9},color:'#aaa',stepSize:2} },
+          y: { grid:{display:false}, ticks:{font:{family:'DM Sans',size:10},color:'#333'} }
+        }
+      }
+    });
+
+    // Stacked bar + line — projets par trimestre
+    const labels = ['T1 23','T2 23','T3 23','T4 23','T1 24','T2 24','T3 24','T4 24','T1 25'];
+    const simple  = [1,1,1,2,2,2,2,2,2];
+    const moyen   = [0,0,1,0,1,1,1,1,1];
+    const complexe= [0,0,0,0,0,1,0,1,0];
+    const total   = labels.map((_,i) => simple[i]+moyen[i]+complexe[i]);
+    const taux    = total.map(v => Math.round((v / 4) * 100)); // % fictif complexité
+
+    new Chart(document.getElementById('stacked'), {
+      data: {
+        labels,
+        datasets: [
+          {
+            type:'bar', label:'Simple',
+            data: simple,
+            backgroundColor:'#d95f4b', stack:'s', borderRadius:2
+          },
+          {
+            type:'bar', label:'Moyen',
+            data: moyen,
+            backgroundColor:'#c9a84c', stack:'s', borderRadius:2
+          },
+          {
+            type:'bar', label:'Complexe',
+            data: complexe,
+            backgroundColor:'#7a9e7e', stack:'s', borderRadius:2
+          },
+          {
+            type:'line', label:'Taux complexité',
+            data: taux,
+            borderColor:'#d95f4b', borderWidth:2,
+            pointBackgroundColor:'#d95f4b', pointRadius:4,
+            tension:0.3, yAxisID:'y2', fill:false
+          }
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false} },
+        scales:{
+          x:{ stacked:true, grid:{display:false}, ticks:{font:{size:9},color:'#888'} },
+          y:{
+            stacked:true, position:'left',
+            min:0, max:5,
+            grid:{color:'#f4f1ed'},
+            ticks:{font:{size:9},color:'#aaa',stepSize:1}
+          },
+          y2:{
+            position:'right', min:0, max:100,
+            grid:{display:false},
+            ticks:{
+              font:{size:9},color:'#d95f4b',
+              callback: v => v + ' %'
+            }
+          }
+        }
+      }
+    });
+    </script>
+    """, height=520)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
