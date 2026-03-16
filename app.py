@@ -62,13 +62,6 @@ margin-bottom:25px;
 font-size:18px;
 }
 
-.project-card {
-background:white;
-padding:25px;
-border-radius:12px;
-box-shadow:0 4px 10px rgba(0,0,0,0.07);
-}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -76,7 +69,7 @@ box-shadow:0 4px 10px rgba(0,0,0,0.07);
 
 page = st.sidebar.radio(
     "Navigation",
-    ["Home","Projects","Travel Analytics","Data Experiments"]
+    ["Home","Projects","Travel","Experiments"]
 )
 
 # =====================================================
@@ -90,24 +83,27 @@ if page == "Home":
 
     col1, col2 = st.columns([1,2])
 
+    # PHOTO
     with col1:
         try:
             st.image("photo.jpg", width=250)
         except:
             st.write("📷 Photo coming soon")
 
+    # ABOUT ME
     with col2:
-    st.markdown("""
+
+        st.markdown("""
 ### About me
 
-Nice to meet you!  
+Nice to meet you!
 
-Currently working as a **Data Analyst apprentice**, I am constantly looking for new problems to explore.
+Currently working as a **Data Analyst apprentice**, I am always looking for new topics to explore.
 
 Curious and motivated, I love playing with data and trying to understand what it hides.  
-For me, data analysis is a bit like **magic**: you start with something messy, and little by little patterns appear and solutions emerge.
+For me, data analysis is a bit like **magic**: you start with something messy and little by little patterns appear and solutions emerge.
 
-What I enjoy the most is exploring datasets, asking questions, and turning raw data into insights that help make decisions.
+What I enjoy the most is exploring datasets, asking questions and finding insights that help understand problems better.
 """)
 
 # ---------------- KPI ---------------- #
@@ -149,6 +145,27 @@ What I enjoy the most is exploring datasets, asking questions, and turning raw d
         </div>
         """, unsafe_allow_html=True)
 
+# ---------------- TOOLS GRAPH ---------------- #
+
+    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+    st.subheader("Tools")
+
+    tools = pd.DataFrame({
+        "Tool":["Python","SQL","Power BI","Excel","R"],
+        "Level":[4,4,3,3,2]
+    })
+
+    fig_tools = px.line_polar(
+        tools,
+        r="Level",
+        theta="Tool",
+        line_close=True
+    )
+
+    fig_tools.update_traces(fill='toself')
+
+    st.plotly_chart(fig_tools,use_container_width=True)
+
 # ---------------- JOURNEY ---------------- #
 
     st.markdown('<div class="section"></div>', unsafe_allow_html=True)
@@ -173,42 +190,6 @@ Licence Mathématiques & Informatique appliquées aux Sciences Sociales
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- DATA GRAPH ---------------- #
-
-    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
-    st.subheader("About me in data")
-
-    df = pd.DataFrame({
-        "Category":[
-            "Years studying data",
-            "Dashboards built",
-            "Datasets explored",
-            "Countries visited",
-            "Books per year"
-        ],
-        "Value":[4,15,20,9,12]
-    })
-
-    fig = px.bar(
-        df,
-        x="Value",
-        y="Category",
-        orientation="h",
-        color="Value",
-        text="Value",
-        color_continuous_scale="Brwnyl"
-    )
-
-    fig.update_layout(
-        plot_bgcolor="white",
-        paper_bgcolor="#f4f1ed",
-        coloraxis_showscale=False
-    )
-
-    fig.update_traces(textposition="outside")
-
-    st.plotly_chart(fig,use_container_width=True)
-
 # =====================================================
 # PROJECTS
 # =====================================================
@@ -217,42 +198,13 @@ elif page == "Projects":
 
     st.title("Projects")
 
-    col1,col2 = st.columns(2)
-
-    with col1:
-        st.markdown("""
-<div class="project-card">
-
-### Airbnb Price Analysis
-
-Goal  
-Understand price drivers in European cities.
-
-Tools  
-Python, Pandas, Data Visualization
-
-</div>
-""", unsafe_allow_html=True)
-
-    with col2:
-        st.markdown("""
-<div class="project-card">
-
-### Netflix Trends
-
-Analysis of movie duration and genre evolution.
-
-Tools  
-Python, Visualization
-
-</div>
-""", unsafe_allow_html=True)
+    st.write("Projects and analyses will appear here.")
 
 # =====================================================
 # TRAVEL MAP
 # =====================================================
 
-elif page == "Travel Analytics":
+elif page == "Travel":
 
     st.title("Travel Analytics")
 
@@ -277,26 +229,16 @@ elif page == "Travel Analytics":
         projection="natural earth"
     )
 
-    fig.update_layout(
-        height=600,
-        margin={"r":0,"t":0,"l":0,"b":0}
-    )
+    fig.update_layout(height=600)
 
     st.plotly_chart(fig,use_container_width=True)
 
 # =====================================================
-# DATA EXPERIMENTS
+# EXPERIMENTS
 # =====================================================
 
-elif page == "Data Experiments":
+elif page == "Experiments":
 
     st.title("Data Experiments")
 
-    st.write("""
-This section will contain small data explorations.
-
-Examples:
-- Spotify data analysis
-- Movie trends
-- Paris open data
-""")
+    st.write("Small data explorations will appear here.")
