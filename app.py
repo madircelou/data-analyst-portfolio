@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 st.set_page_config(
-    page_title="Elodie Marcouire | Data Portfolio",
+    page_title="Elodie Marcouire | Portfolio Data",
     layout="wide"
 )
 
@@ -13,53 +13,59 @@ st.markdown("""
 <style>
 
 .stApp {
-    background-color:#f4f1ed;
-    color:#2f2f2f;
+background-color:#f4f1ed;
+color:#2f2f2f;
 }
 
-.big-title {
-font-size:60px;
-font-weight:700;
-}
+/* Bandeau */
 
-.subtitle {
-font-size:24px;
-color:#8b5e3c;
+.hero {
+background:#8b5e3c;
+padding:60px;
+border-radius:10px;
 margin-bottom:40px;
 }
 
-.section {
-margin-top:70px;
-}
-
-.kpi-card {
-background:white;
-padding:30px;
-border-radius:15px;
-text-align:center;
-box-shadow:0 4px 12px rgba(0,0,0,0.08);
-}
-
-.kpi-number {
-font-size:40px;
+.hero-title {
+font-size:60px;
 font-weight:700;
-color:#8b5e3c;
+color:white;
 }
 
-.kpi-label {
-font-size:18px;
-color:#555;
+.hero-sub {
+font-size:22px;
+color:#f3e7db;
 }
+
+/* timeline */
 
 .timeline {
-border-left:4px solid #8b5e3c;
-padding-left:25px;
-margin-top:20px;
+display:flex;
+justify-content:space-between;
+margin-top:40px;
 }
 
-.timeline-item {
-margin-bottom:25px;
-font-size:18px;
+.step {
+background:white;
+padding:20px;
+border-radius:10px;
+width:30%;
+box-shadow:0 3px 10px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+/* tools */
+
+.tool-card {
+background:white;
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+box-shadow:0 3px 8px rgba(0,0,0,0.05);
+}
+
+.section {
+margin-top:60px;
 }
 
 </style>
@@ -69,149 +75,166 @@ font-size:18px;
 
 page = st.sidebar.radio(
     "Navigation",
-    ["Home","Projects","Travel","Experiments"]
+    ["Accueil","Projets","Voyages","Expérimentations"]
 )
 
 # =====================================================
-# HOME
+# ACCUEIL
 # =====================================================
 
-if page == "Home":
+if page == "Accueil":
 
-    st.markdown('<div class="big-title">Elodie Marcouire</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitle">Data Analyst Portfolio</div>', unsafe_allow_html=True)
+    # HERO BANNER
 
-    col1, col2 = st.columns([1,2])
+    st.markdown("""
+<div class="hero">
+<div class="hero-title">Elodie Marcouire</div>
+<div class="hero-sub">Portfolio Data Analyst</div>
+</div>
+""", unsafe_allow_html=True)
 
-    # PHOTO
-    with col1:
-        try:
-            st.image("photo.jpg", width=250)
-        except:
-            st.write("📷 Photo coming soon")
+# ---------------- TIMELINE ---------------- #
 
-    # ABOUT ME
-    with col2:
-
-        st.markdown("""
-### About me
-
-Nice to meet you!
-
-Currently working as a **Data Analyst apprentice**, I am always looking for new topics to explore.
-
-Curious and motivated, I love playing with data and trying to understand what it hides.  
-For me, data analysis is a bit like **magic**: you start with something messy and little by little patterns appear and solutions emerge.
-
-What I enjoy the most is exploring datasets, asking questions and finding insights that help understand problems better.
-""")
-
-# ---------------- KPI ---------------- #
-
-    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
-    st.subheader("About me in numbers")
-
-    k1,k2,k3,k4 = st.columns(4)
-
-    with k1:
-        st.markdown("""
-        <div class="kpi-card">
-        <div class="kpi-number">4</div>
-        <div class="kpi-label">Years studying data</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with k2:
-        st.markdown("""
-        <div class="kpi-card">
-        <div class="kpi-number">15+</div>
-        <div class="kpi-label">Dashboards built</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with k3:
-        st.markdown("""
-        <div class="kpi-card">
-        <div class="kpi-number">20+</div>
-        <div class="kpi-label">Datasets explored</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with k4:
-        st.markdown("""
-        <div class="kpi-card">
-        <div class="kpi-number">9</div>
-        <div class="kpi-label">Countries visited</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-# ---------------- TOOLS GRAPH ---------------- #
-
-    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
-    st.subheader("Tools")
-
-    tools = pd.DataFrame({
-        "Tool":["Python","SQL","Power BI","Excel","R"],
-        "Level":[4,4,3,3,2]
-    })
-
-    fig_tools = px.line_polar(
-        tools,
-        r="Level",
-        theta="Tool",
-        line_close=True
-    )
-
-    fig_tools.update_traces(fill='toself')
-
-    st.plotly_chart(fig_tools,use_container_width=True)
-
-# ---------------- JOURNEY ---------------- #
-
-    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
-    st.subheader("My Journey")
+    st.markdown("### Mon parcours")
 
     st.markdown("""
 <div class="timeline">
 
-<div class="timeline-item">
-<b>2020</b> – Baccalauréat ES (Mention Bien)
+<div class="step">
+<b>2020</b><br>
+Bac ES<br>
+Mention Bien
 </div>
 
-<div class="timeline-item">
-<b>2020 - 2024</b> – Université de Bordeaux  
-Licence Mathématiques & Informatique appliquées aux Sciences Sociales
+<div class="step">
+<b>2020 - 2024</b><br>
+Licence MIASHS<br>
+Université de Bordeaux
 </div>
 
-<div class="timeline-item">
-<b>2024 - Today</b> – Data Analyst (Apprenticeship)
+<div class="step">
+<b>2024 - Aujourd'hui</b><br>
+Alternante Data Analyst<br>
+Domofrance
+</div>
+
+<div class="step">
+<b>What's next ?</b><br>
+La suite reste à écrire…
 </div>
 
 </div>
 """, unsafe_allow_html=True)
 
+# ---------------- ABOUT + TOOLS ---------------- #
+
+    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+
+    col1, col2 = st.columns([2,1])
+
+    with col1:
+
+        st.markdown("""
+### Qui suis-je ?
+
+Enchantée !
+
+Actuellement **en alternance en data**, je suis toujours à la recherche de nouveaux sujets à explorer.
+
+Curieuse et motivée, j'aime jouer avec la donnée et essayer de comprendre ce qu'elle raconte.  
+Pour moi la data c'est un peu de la **magie** : on part de quelque chose de brouillon et petit à petit des patterns apparaissent et des solutions émergent.
+
+Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des questions et trouver des insights qui permettent de mieux comprendre les problèmes.
+""")
+
+    with col2:
+
+        st.markdown("### Outils")
+
+        st.markdown("""
+<div class="tool-card">
+<b>Python</b><br>
+Analyse de données, pandas, visualisation
+</div>
+""", unsafe_allow_html=True)
+
+        st.markdown("""
+<div class="tool-card">
+<b>SQL</b><br>
+Extraction et transformation des données
+</div>
+""", unsafe_allow_html=True)
+
+        st.markdown("""
+<div class="tool-card">
+<b>Power BI</b><br>
+Création de dashboards et reporting
+</div>
+""", unsafe_allow_html=True)
+
+        st.markdown("""
+<div class="tool-card">
+<b>Excel</b><br>
+Exploration rapide et manipulation de données
+</div>
+""", unsafe_allow_html=True)
+
+# ---------------- CHIFFRES ---------------- #
+
+    st.markdown('<div class="section"></div>', unsafe_allow_html=True)
+
+    st.subheader("Quelques chiffres")
+
+    df = pd.DataFrame({
+        "Catégorie":[
+            "Années dans la data",
+            "Dashboards réalisés",
+            "Datasets explorés",
+            "Pays visités"
+        ],
+        "Valeur":[4,15,20,9]
+    })
+
+    fig = px.bar(
+        df,
+        x="Valeur",
+        y="Catégorie",
+        orientation="h",
+        color="Valeur",
+        text="Valeur",
+        color_continuous_scale="Brwnyl"
+    )
+
+    fig.update_layout(
+        plot_bgcolor="white",
+        paper_bgcolor="#f4f1ed",
+        coloraxis_showscale=False
+    )
+
+    st.plotly_chart(fig,use_container_width=True)
+
 # =====================================================
-# PROJECTS
+# PROJETS
 # =====================================================
 
-elif page == "Projects":
+elif page == "Projets":
 
-    st.title("Projects")
+    st.title("Projets")
 
-    st.write("Projects and analyses will appear here.")
+    st.write("Les projets data seront présentés ici.")
 
 # =====================================================
-# TRAVEL MAP
+# VOYAGES
 # =====================================================
 
-elif page == "Travel":
+elif page == "Voyages":
 
-    st.title("Travel Analytics")
+    st.title("Voyages")
 
     travel = pd.DataFrame({
         "country":[
-            "Mauritania","Italy","Portugal","Spain",
-            "United Kingdom","Senegal","Morocco","Malta","Thailand"
+            "Mauritanie","Italie","Portugal","Espagne",
+            "Angleterre","Sénégal","Maroc","Malte","Thaïlande"
         ],
         "lat":[
             20.25,41.90,38.72,40.41,51.50,14.69,33.57,35.90,13.75
@@ -234,11 +257,11 @@ elif page == "Travel":
     st.plotly_chart(fig,use_container_width=True)
 
 # =====================================================
-# EXPERIMENTS
+# EXPERIMENTATIONS
 # =====================================================
 
-elif page == "Experiments":
+elif page == "Expérimentations":
 
-    st.title("Data Experiments")
+    st.title("Expérimentations")
 
-    st.write("Small data explorations will appear here.")
+    st.write("Des analyses exploratoires seront ajoutées ici.")
