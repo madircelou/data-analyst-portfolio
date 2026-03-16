@@ -19,17 +19,7 @@ footer {visibility:hidden;}
 .stApp{
 background-color:#f4f1ed;
 color:#1f1f1f;
-}
-
-/* corrige les metric streamlit */
-
-[data-testid="stMetricValue"]{
-color:#1f1f1f;
-font-size:35px;
-}
-
-[data-testid="stMetricLabel"]{
-color:#555;
+font-family: "Segoe UI", sans-serif;
 }
 
 /* titre */
@@ -37,10 +27,8 @@ color:#555;
 .name{
 font-size:70px;
 text-align:center;
-font-family:"Trebuchet MS", sans-serif;
 font-weight:700;
 margin-top:40px;
-color:#1f1f1f;
 }
 
 .subtitle{
@@ -52,11 +40,25 @@ margin-bottom:40px;
 
 /* timeline */
 
+.timeline-container{
+position:relative;
+margin-top:50px;
+margin-bottom:50px;
+}
+
+.timeline-line{
+height:4px;
+background:#c7c7c7;
+position:absolute;
+top:40px;
+left:5%;
+right:5%;
+}
+
 .timeline{
 display:flex;
-align-items:center;
 justify-content:space-between;
-margin-top:30px;
+position:relative;
 }
 
 .step{
@@ -64,16 +66,33 @@ background:white;
 padding:20px;
 border-radius:10px;
 width:22%;
-box-shadow:0 3px 8px rgba(0,0,0,0.08);
 text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }
 
-.arrow{
-font-size:40px;
+.dot{
+width:16px;
+height:16px;
+background:#1f77b4;
+border-radius:50%;
+margin:0 auto 10px auto;
 }
+
+/* sections */
 
 .section{
-margin-top:60px;
+margin-top:70px;
+}
+
+/* metrics */
+
+[data-testid="stMetricValue"]{
+color:#1f1f1f;
+font-size:35px;
+}
+
+[data-testid="stMetricLabel"]{
+color:#555;
 }
 
 </style>
@@ -100,41 +119,45 @@ if page == "Accueil":
     st.markdown("### Mon parcours")
 
     st.markdown("""
+<div class="timeline-container">
+
+<div class="timeline-line"></div>
+
 <div class="timeline">
 
 <div class="step">
+<div class="dot"></div>
 <b>2020</b><br>
 Bac ES<br>
 Spécialité Maths
 </div>
 
-<div class="arrow">→</div>
-
 <div class="step">
+<div class="dot"></div>
 <b>2020-2024</b><br>
 Licence MIASHS<br>
 Université de Bordeaux
 </div>
 
-<div class="arrow">→</div>
-
 <div class="step">
+<div class="dot"></div>
 <b>2024-Aujourd'hui</b><br>
 Alternante Data Analyst<br>
 Domofrance
 </div>
 
-<div class="arrow">→</div>
-
 <div class="step">
+<div class="dot"></div>
 <b>What's next ?</b><br>
 La suite reste à écrire
 </div>
 
 </div>
+
+</div>
 """, unsafe_allow_html=True)
 
-# ---------------- ABOUT + TOOLS ---------------- #
+# ---------------- ABOUT + RADAR ---------------- #
 
     st.markdown('<div class="section"></div>', unsafe_allow_html=True)
 
@@ -149,14 +172,15 @@ Enchantée !
 
 Actuellement **en alternance en data**, je suis toujours à la recherche de nouveaux sujets à explorer.
 
-Curieuse et motivée, j'aime jouer avec la donnée et essayer de comprendre ce qu'elle raconte.
+J’ai grandi en changeant souvent d’environnement : j’ai vécu **au Maroc, en Mauritanie, au Sénégal, à Paris**, et aujourd’hui à Bordeaux.  
+Ces expériences m’ont appris à observer, m’adapter et comprendre des contextes très différents — un peu comme lorsqu’on explore un dataset inconnu.
 
-Pour moi la data c'est un peu de la **magie** : on part de quelque chose de brouillon et petit à petit des patterns apparaissent et des solutions émergent.
+Curieuse et motivée, j’aime jouer avec la donnée et essayer de comprendre ce qu’elle raconte.
 
-Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des questions et trouver des insights qui permettent de mieux comprendre les problèmes.
+Pour moi la data c’est un peu de la **magie** : on part de quelque chose de brouillon et petit à petit des patterns apparaissent et des solutions émergent.
+
+Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : mes projets, mes explorations et quelques analyses qui reflètent ma curiosité.
 """)
-
-    # radar charts
 
     with col2:
 
@@ -170,37 +194,25 @@ Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des qu
         })
 
         fig1 = px.line_polar(
-    data_analysis,
-    r="score",
-    theta="tool",
-    line_close=True
-)
-
-fig1.update_traces(
-    fill='toself',
-    line_color="#1f77b4",
-    fillcolor="rgba(31,119,180,0.35)"
-)
-
-fig1.update_layout(
-    showlegend=False,
-    paper_bgcolor="rgba(0,0,0,0)",
-    polar=dict(
-        bgcolor="rgba(0,0,0,0)",
-        radialaxis=dict(
-            visible=True,
-            range=[0,4],
-            gridcolor="#d6d6d6"
+            data_analysis,
+            r="score",
+            theta="tool",
+            line_close=True
         )
-    )
-)
 
-        fig1.update_traces(fill='toself')
+        fig1.update_traces(
+            fill='toself',
+            line_color="#1f77b4",
+            fillcolor="rgba(31,119,180,0.35)"
+        )
 
         fig1.update_layout(
             showlegend=False,
             paper_bgcolor="rgba(0,0,0,0)",
-            polar=dict(bgcolor="rgba(0,0,0,0)", radialaxis=dict(range=[0,4]))
+            polar=dict(
+                bgcolor="rgba(0,0,0,0)",
+                radialaxis=dict(range=[0,4])
+            )
         )
 
         radar1.plotly_chart(fig1,use_container_width=True)
@@ -213,37 +225,25 @@ fig1.update_layout(
         })
 
         fig2 = px.line_polar(
-    data_analysis,
-    r="score",
-    theta="tool",
-    line_close=True
-)
-
-fig2.update_traces(
-    fill='toself',
-    line_color="#1f77b4",
-    fillcolor="rgba(31,119,180,0.35)"
-)
-
-fig2.update_layout(
-    showlegend=False,
-    paper_bgcolor="rgba(0,0,0,0)",
-    polar=dict(
-        bgcolor="rgba(0,0,0,0)",
-        radialaxis=dict(
-            visible=True,
-            range=[0,4],
-            gridcolor="#d6d6d6"
+            stack,
+            r="score",
+            theta="tool",
+            line_close=True
         )
-    )
-)
 
-        fig2.update_traces(fill='toself')
+        fig2.update_traces(
+            fill='toself',
+            line_color="#ff7f0e",
+            fillcolor="rgba(255,127,14,0.35)"
+        )
 
         fig2.update_layout(
             showlegend=False,
             paper_bgcolor="rgba(0,0,0,0)",
-            polar=dict(bgcolor="rgba(0,0,0,0)", radialaxis=dict(range=[0,4]))
+            polar=dict(
+                bgcolor="rgba(0,0,0,0)",
+                radialaxis=dict(range=[0,4])
+            )
         )
 
         radar2.plotly_chart(fig2,use_container_width=True)
@@ -268,6 +268,8 @@ fig2.update_layout(
 elif page == "Projets":
 
     st.title("Projets")
+
+    st.write("Les projets data seront présentés ici.")
 
 # =====================================================
 # VOYAGES
