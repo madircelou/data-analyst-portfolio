@@ -9,15 +9,15 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ─────────────────────────────────────────────
-# SESSION STATE — page active
-# ─────────────────────────────────────────────
+# SESSION STATE
 if "page" not in st.session_state:
     st.session_state.page = "Accueil"
+
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
 # ─────────────────────────────────────────────
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
@@ -42,160 +42,126 @@ section[data-testid="stSidebarNav"] { display: none; }
     font-family: 'DM Sans', sans-serif;
 }
 
-/* ── Hero ── */
+/* HERO */
+
 .hero-wrap {
     text-align: center;
     padding: 60px 20px 20px;
     border-bottom: 1px solid #ddd;
     margin-bottom: 50px;
 }
+
 .hero-name {
     font-family: 'Playfair Display', serif;
     font-size: clamp(52px, 8vw, 90px);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    color: var(--ink);
 }
+
 .hero-subtitle {
-    font-size: 15px; font-weight: 300;
-    letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--muted); margin-top: 14px;
+    font-size: 15px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 14px;
 }
+
 .hero-accent {
-    display: inline-block;
-    width: 40px; height: 3px;
+    width: 40px;
+    height: 3px;
     background: var(--coral);
     margin: 18px auto 0;
 }
 
-/* ── Sections ── */
+/* SECTIONS */
+
 .section-label {
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--coral); margin-bottom: 6px;
-}
-.section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 30px; font-weight: 700;
-    color: var(--ink); margin-bottom: 28px;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--coral);
 }
 
-/* ── Bio card ── */
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    margin-bottom: 28px;
+}
+
+/* BIO */
+
 .bio-card {
     background: var(--white);
     border-radius: 12px;
     padding: 36px 40px;
     box-shadow: 0 2px 24px rgba(0,0,0,0.06);
-    line-height: 1.85; font-size: 15px; color: #333;
-}
-.bio-card strong { color: var(--ink); font-weight: 500; }
-.bio-highlight {
-    display: inline-block;
-    background: #fdf3e7; color: var(--coral);
-    font-weight: 500; padding: 1px 8px; border-radius: 4px;
+    line-height: 1.85;
 }
 
-/* ── Projet card ── */
-.projet-card {
-    background: var(--white); border-radius: 12px;
-    padding: 28px 30px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-    margin-bottom: 16px; border-left: 4px solid var(--coral);
-}
-.projet-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px; font-weight: 700;
-    color: var(--ink); margin-bottom: 8px;
-}
-.projet-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-.tag {
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 3px 10px; border-radius: 20px;
-    background: var(--cream); color: var(--muted); border: 1px solid #ddd;
-}
+/* NAV BUTTONS */
 
-/* ── Nav buttons reset ── */
 div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button {
     background: #1c1c1c !important;
     border: none !important;
     border-radius: 0 !important;
-    color: rgba(255,255,255,0.55) !important;
-    font-family: 'DM Sans', sans-serif !important;
+    color: rgba(255,255,255,0.6) !important;
     font-size: 11px !important;
-    font-weight: 500 !important;
     letter-spacing: 0.2em !important;
     text-transform: uppercase !important;
-    padding: 14px 8px !important;
-    width: 100% !important;
-    box-shadow: none !important;
-    transition: color 0.15s !important;
-}
-div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {
-    color: white !important;
-    background: #1c1c1c !important;
 }
 
-/* ── Map intro ── */
-.map-intro {
-    font-size: 15px; color: var(--muted);
-    max-width: 600px; margin-bottom: 24px; line-height: 1.7;
+div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {
+    color: white !important;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
+
 # ─────────────────────────────────────────────
-# TOP NAVIGATION BAR
+# NAVBAR
 # ─────────────────────────────────────────────
 
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
 
 st.markdown("""
-<style>
-.navbar {
-    background:#1c1c1c;
-    height:52px;
-    display:flex;
-    align-items:center;
-    padding:0 40px;
-    margin:-1rem -1rem 0 -1rem;
-}
-
-.nav-title {
-    font-family:'Playfair Display', serif;
-    font-size:17px;
-    font-weight:700;
-    color:white;
-}
-</style>
-
-<div class="navbar">
-<span class="nav-title">E. Marcouire</span>
+<div style="
+background:#1c1c1c;
+height:52px;
+display:flex;
+align-items:center;
+padding:0 40px;
+margin:-1rem -1rem 0 -1rem;">
+<span style="
+font-family:'Playfair Display', serif;
+font-size:17px;
+font-weight:700;
+color:white;">
+E. Marcouire
+</span>
 </div>
 """, unsafe_allow_html=True)
-
-# boutons navigation
 
 cols = st.columns([5,1,1,1,1])
 
 with cols[0]:
-    st.markdown('<div style="height:40px;background:#1c1c1c;margin-top:-48px;"></div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div style="height:40px;background:#1c1c1c;margin-top:-48px;"></div>',
+        unsafe_allow_html=True
+    )
 
 for col, item in zip(cols[1:], nav_items):
     with col:
-
-        active = st.session_state.page == item
-        label = f"**{item}**" if active else item
-
-        if st.button(label, key=f"nav_{item}", use_container_width=True):
+        if st.button(item, key=f"nav_{item}", use_container_width=True):
             st.session_state.page = item
             st.rerun()
 
 page = st.session_state.page
+
+
 # ─────────────────────────────────────────────
-# ACCUEIL
+# PAGE ACCUEIL
 # ─────────────────────────────────────────────
+
 if page == "Accueil":
 
     st.markdown("""
@@ -206,124 +172,36 @@ if page == "Accueil":
     </div>
     """, unsafe_allow_html=True)
 
-    # ── FRISE ─────────────────────────────────
-    st.markdown('<div class="section-label">Parcours</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">Ma trajectoire</div>', unsafe_allow_html=True)
 
-    components.html("""
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { background: #f4f1ed; }
-      .tl { display: flex; overflow-x: auto; padding: 10px 4px 28px; }
-      .tl-item {
-        flex: 1; min-width: 150px;
-        position: relative; padding: 26px 12px 16px;
-      }
-      .tl-item::before {
-        content: ""; position: absolute;
-        top: 19px; left: 0; right: 0;
-        height: 2px; background: #d9d5cf;
-      }
-      .tl-item:first-child::before { left: 50%; }
-      .tl-item:last-child::before  { right: 50%; }
-      .tl-dot {
-        width: 14px; height: 14px; border-radius: 50%;
-        background: #d95f4b; border: 3px solid #f4f1ed;
-        box-shadow: 0 0 0 2px #d95f4b;
-        margin: 0 auto 16px; position: relative; z-index: 1;
-      }
-      .current .tl-dot { background: #7a9e7e; box-shadow: 0 0 0 2px #7a9e7e; }
-      .future  .tl-dot { background: transparent; border-color: #ccc; box-shadow: 0 0 0 2px #ccc; }
-      .tl-year {
-        font-family: 'Playfair Display', serif;
-        font-size: 19px; font-weight: 700;
-        color: #1c1c1c; text-align: center; margin-bottom: 6px;
-      }
-      .current .tl-year { color: #7a9e7e; }
-      .future  .tl-year { color: #7a7a7a; font-style: italic; }
-      .tl-role {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 12px; font-weight: 500;
-        color: #1c1c1c; text-align: center; margin-bottom: 4px;
-      }
-      .tl-detail {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 11px; color: #7a7a7a;
-        text-align: center; line-height: 1.55;
-      }
-    </style>
-    <div class="tl">
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-year">2002–18</div>
-        <div class="tl-role">Maroc · Mauritanie · Sénégal</div>
-        <div class="tl-detail">Grandir entre cultures,<br>lire les contextes</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-year">2020</div>
-        <div class="tl-role">Bac ES</div>
-        <div class="tl-detail">Spécialité Mathématiques<br>Mention Bien</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-year">2020</div>
-        <div class="tl-role">Bordeaux</div>
-        <div class="tl-detail">Licence MIASHS<br>Université de Bordeaux</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-year">2023</div>
-        <div class="tl-role">Premiers dashboards</div>
-        <div class="tl-detail">Power BI · SQL · Python<br>La donnée comme langage</div>
-      </div>
-      <div class="tl-item current">
-        <div class="tl-dot"></div>
-        <div class="tl-year">2024 →</div>
-        <div class="tl-role">Alternante Data Analyst</div>
-        <div class="tl-detail">Domofrance<br>Snowflake · Talend · DataGalaxy</div>
-      </div>
-      <div class="tl-item future">
-        <div class="tl-dot"></div>
-        <div class="tl-year">2026+</div>
-        <div class="tl-role">What's next?</div>
-        <div class="tl-detail">La suite est<br>encore à écrire ✦</div>
-      </div>
-    </div>
-    """, height=175)
+    # BIO + RADARS
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # ── BIO + RADARS ──────────────────────────
-    col_bio, col_radar = st.columns([3, 2], gap="large")
+    col_bio, col_radar = st.columns([3,2])
 
     with col_bio:
+
         st.markdown('<div class="section-label">À propos</div>', unsafe_allow_html=True)
         st.markdown('<div class="section-title">Qui suis-je ?</div>', unsafe_allow_html=True)
+
         st.markdown("""
         <div class="bio-card">
-            <p>J'ai grandi entre le <strong>Maroc, la Mauritanie et le Sénégal</strong>
-            avant de poser mes valises à Bordeaux pour ma licence
-            <span class="bio-highlight">MIASHS</span>.
-            Cette enfance nomade m'a appris une chose essentielle :
-            comprendre rapidement un contexte inconnu — une compétence
-            précieuse quand on explore un nouveau dataset.</p>
-            <p style="margin-top:16px;">Aujourd'hui <strong>alternante Data Analyst chez Domofrance</strong>,
-            je travaille au quotidien avec <span class="bio-highlight">Power BI · Snowflake · Talend</span>
-            pour transformer des données brutes en tableaux de bord actionnables.
-            J'interviens sur toute la chaîne : collecte, modélisation, visualisation et documentation.</p>
-            <p style="margin-top:16px;">Ce qui me motive ? Ce moment un peu magique où un dataset chaotique
-            révèle soudainement un pattern — parce que la donnée, c'est d'abord une <strong>histoire à raconter</strong>.</p>
+
+        J'ai grandi entre **le Maroc, la Mauritanie et le Sénégal**
+        avant de venir étudier à Bordeaux.
+
+        Aujourd'hui **alternante Data Analyst chez Domofrance**,
+        je travaille avec **Power BI · Snowflake · Talend**
+        pour transformer des données brutes en tableaux de bord.
+
+        Ce qui me passionne : comprendre ce que les données racontent.
+
         </div>
         """, unsafe_allow_html=True)
 
-    with col_radar:
-        st.markdown('<div class="section-label">Compétences</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">Stack</div>', unsafe_allow_html=True)
 
-        # Deux radars Chart.js côte à côte dans un seul composant = zéro problème de layout
+    with col_radar:
+
         components.html("""
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -331,7 +209,6 @@ if page == "Accueil":
 display:flex;
 gap:20px;
 justify-content:center;
-align-items:center;
 }
 
 .chart{
@@ -356,8 +233,7 @@ responsive:true,
 plugins:{legend:{display:false}},
 scales:{
 r:{
-min:0,
-max:4,
+min:0,max:4,
 ticks:{display:false},
 grid:{color:"#e0dcd6"},
 angleLines:{color:"#e0dcd6"},
@@ -374,8 +250,7 @@ labels:["Python","SQL","Excel","R"],
 datasets:[{
 data:[3,4,3,2],
 backgroundColor:"rgba(217,95,75,0.2)",
-borderColor:"#d95f4b",
-borderWidth:2
+borderColor:"#d95f4b"
 }]
 }
 });
@@ -387,8 +262,7 @@ labels:["Snowflake","Talend","Power BI","DataGalaxy","Confluence"],
 datasets:[{
 data:[3,3,4,2,2],
 backgroundColor:"rgba(122,158,126,0.2)",
-borderColor:"#7a9e7e",
-borderWidth:2
+borderColor:"#7a9e7e"
 }]
 }
 });
@@ -396,205 +270,42 @@ borderWidth:2
 },200)
 
 </script>
+
 """, height=260)
 
-          new Chart(document.getElementById('r1'), {
-            ...radarOpts,
-            data: {
-              labels: ['Python', 'SQL', 'Excel', 'R'],
-              datasets: [{
-                data: [3, 4, 3, 2],
-                backgroundColor: 'rgba(217,95,75,0.2)',
-                borderColor: '#d95f4b',
-                borderWidth: 2,
-                pointBackgroundColor: '#d95f4b',
-                pointRadius: 3
-              }]
-            }
-          });
-
-          new Chart(document.getElementById('r2'), {
-            ...radarOpts,
-            data: {
-              labels: ['Snowflake','Talend','Power BI','DataGalaxy','Confluence'],
-              datasets: [{
-                data: [3, 3, 4, 2, 2],
-                backgroundColor: 'rgba(122,158,126,0.2)',
-                borderColor: '#7a9e7e',
-                borderWidth: 2,
-                pointBackgroundColor: '#7a9e7e',
-                pointRadius: 3
-              }]
-            }
-          });
-        </script>
-        """, height=280)
-
-    # ── STATS ─────────────────────────────────
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown('<div class="section-label">En chiffres</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">Ce que disent les données</div>', unsafe_allow_html=True)
-
-    components.html("""
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400&display=swap" rel="stylesheet">
-    <style>
-      * { box-sizing:border-box; margin:0; padding:0; }
-      body { background: transparent; }
-      .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-      .card {
-        background:#fff; border-radius:12px;
-        padding:28px 16px; text-align:center;
-        box-shadow:0 2px 12px rgba(0,0,0,0.05);
-        border-top:3px solid #d95f4b;
-      }
-      .card:nth-child(2){border-color:#7a9e7e;}
-      .card:nth-child(3){border-color:#c9a84c;}
-      .card:nth-child(4){border-color:#9b8fcf;}
-      .num {
-        font-family:'Playfair Display',serif;
-        font-size:44px; font-weight:700;
-        color:#1c1c1c; line-height:1; margin-bottom:10px;
-      }
-      .lbl {
-        font-family:'DM Sans',sans-serif;
-        font-size:11px; letter-spacing:0.12em;
-        text-transform:uppercase; color:#7a7a7a;
-      }
-    </style>
-    <div class="grid">
-      <div class="card"><div class="num">4</div><div class="lbl">Années dans la data</div></div>
-      <div class="card"><div class="num">15+</div><div class="lbl">Dashboards réalisés</div></div>
-      <div class="card"><div class="num">20+</div><div class="lbl">Datasets explorés</div></div>
-      <div class="card"><div class="num">9</div><div class="lbl">Pays visités</div></div>
-    </div>
-    """, height=140)
-
-    st.markdown("<br><br>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# PROJETS
+# PAGE PROJETS
 # ─────────────────────────────────────────────
+
 elif page == "Projets":
 
-    st.markdown("""
-    <div class="hero-wrap" style="padding:40px 20px 10px;">
-        <div class="hero-name" style="font-size:clamp(36px,6vw,64px);">Projets</div>
-        <div class="hero-subtitle">Études de cas & réalisations</div>
-        <div class="hero-accent"></div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.title("Projets")
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.write("Section projets en cours de construction.")
 
-    projets = [
-        {
-            "title": "Dashboard Locataires — Domofrance",
-            "description": "Tableau de bord Power BI pour le suivi des indicateurs de satisfaction et d'occupation du parc immobilier. Connexion Snowflake, rafraîchissement automatique, 3 niveaux de granularité.",
-            "tags": ["Power BI", "Snowflake", "SQL", "Alternance"],
-            "color": "#d95f4b"
-        },
-        {
-            "title": "Analyse exploratoire — Données ouvertes",
-            "description": "Exploration d'un jeu de données public avec Python (pandas, seaborn). Nettoyage, détection d'outliers, visualisation des corrélations et synthèse des insights.",
-            "tags": ["Python", "Pandas", "Seaborn", "EDA"],
-            "color": "#7a9e7e"
-        },
-        {
-            "title": "Pipeline de données — Projet universitaire",
-            "description": "Conception d'un pipeline ETL en R pour agréger et nettoyer des sources hétérogènes. Modélisation relationnelle et rapport automatisé en RMarkdown.",
-            "tags": ["R", "ETL", "MIASHS", "RMarkdown"],
-            "color": "#c9a84c"
-        },
-    ]
-
-    for p in projets:
-        tags_html = "".join([f'<span class="tag">{t}</span>' for t in p["tags"]])
-        st.markdown(f"""
-        <div class="projet-card" style="border-left-color:{p['color']};">
-            <div class="projet-title">{p['title']}</div>
-            <div style="font-size:14px;color:#555;line-height:1.7;">{p['description']}</div>
-            <div class="projet-tags">{tags_html}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.info("✦ D'autres projets arrivent bientôt — en cours de documentation.")
 
 # ─────────────────────────────────────────────
-# VOYAGES
+# PAGE VOYAGES
 # ─────────────────────────────────────────────
+
 elif page == "Voyages":
 
-    st.markdown("""
-    <div class="hero-wrap" style="padding:40px 20px 10px;">
-        <div class="hero-name" style="font-size:clamp(36px,6vw,64px);">Voyages</div>
-        <div class="hero-subtitle">9 pays · 4 continents · 1 curiosité constante</div>
-        <div class="hero-accent"></div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("""
-    <p class="map-intro">Grandir en changeant de pays, c'est apprendre à observer des systèmes très différents.
-    Voici la carte de mes escales — certaines pour l'enfance, d'autres pour la curiosité.</p>
-    """, unsafe_allow_html=True)
-
     travel = pd.DataFrame({
-        "country": ["Mauritanie","Italie","Portugal","Espagne","Angleterre","Sénégal","Maroc","Malte","Thaïlande"],
-        "lat":  [20.25, 41.90, 38.72, 40.41, 51.50, 14.69, 33.57, 35.90, 13.75],
-        "lon":  [-10.32, 12.49, -9.13, -3.70, -0.12, -17.44, -7.59, 14.51, 100.50],
-        "note": [
-            "Enfance · 3 ans sur place","Voyage · Rome & Florence","Voyage · Lisbonne",
-            "Voyage · Barcelone & Madrid","Voyage · Londres","Enfance · Dakar",
-            "Enfance · Casablanca & Rabat","Voyage · La Valette","Voyage · Bangkok & Chiang Mai"
-        ]
+        "country":["Mauritanie","Italie","Portugal","Espagne","Angleterre","Sénégal","Maroc","Malte","Thaïlande"],
+        "lat":[20.25,41.9,38.72,40.41,51.5,14.69,33.57,35.9,13.75],
+        "lon":[-10.32,12.49,-9.13,-3.7,-0.12,-17.44,-7.59,14.51,100.5]
     })
 
-    fig = px.scatter_geo(
-        travel, lat="lat", lon="lon",
-        hover_name="country",
-        hover_data={"note": True, "lat": False, "lon": False},
-        projection="natural earth"
-    )
-    fig.update_traces(marker=dict(size=12, color="#d95f4b", opacity=0.85, line=dict(width=1.5, color="#fff")))
-    fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        geo=dict(
-            bgcolor="rgba(0,0,0,0)",
-            showland=True, landcolor="#e8e4de",
-            showocean=True, oceancolor="#dce8f0",
-            showcoastlines=True, coastlinecolor="#c5bfb8",
-            showframe=False, showcountries=True, countrycolor="#cec8c1",
-        ),
-        margin=dict(t=10, b=10, l=0, r=0),
-        height=520,
-        font=dict(color="#1c1c1c", family="DM Sans")
-    )
+    fig = px.scatter_geo(travel, lat="lat", lon="lon", hover_name="country")
+
     st.plotly_chart(fig, use_container_width=True)
 
-    chips = " &nbsp;·&nbsp; ".join(travel["country"].tolist())
-    st.markdown(f'<p style="color:#7a7a7a;font-size:14px;">{chips}</p>', unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# EXPERIMENTATIONS
+# PAGE EXPERIMENTATIONS
 # ─────────────────────────────────────────────
+
 elif page == "Expérimentations":
 
-    st.markdown("""
-    <div class="hero-wrap" style="padding:40px 20px 10px;">
-        <div class="hero-name" style="font-size:clamp(36px,6vw,64px);">Expérimentations</div>
-        <div class="hero-subtitle">Analyses · Curiosités · Visualisations</div>
-        <div class="hero-accent"></div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("""
-    <div class="bio-card" style="max-width:600px;">
-        <p>Cette section est un <strong>laboratoire ouvert</strong> — des analyses rapides,
-        des visualisations expérimentales, des datasets trouvés par hasard et trop intéressants
-        pour ne pas être explorés.</p>
-        <p style="color:#7a7a7a;font-size:13px;margin-top:12px;">
-        Prochainement : analyse de mes habitudes de lecture · visualisation du coût de la vie entre mes villes · mini-projet NLP.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.title("Expérimentations")
