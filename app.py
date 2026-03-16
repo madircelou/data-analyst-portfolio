@@ -18,15 +18,29 @@ footer {visibility:hidden;}
 
 .stApp{
 background-color:#f4f1ed;
-color:#2f2f2f;
+color:#1f1f1f;
 }
+
+/* corrige les metric streamlit */
+
+[data-testid="stMetricValue"]{
+color:#1f1f1f;
+font-size:35px;
+}
+
+[data-testid="stMetricLabel"]{
+color:#555;
+}
+
+/* titre */
 
 .name{
 font-size:70px;
 text-align:center;
-font-family: "Trebuchet MS", sans-serif;
+font-family:"Trebuchet MS", sans-serif;
 font-weight:700;
 margin-top:40px;
+color:#1f1f1f;
 }
 
 .subtitle{
@@ -35,6 +49,8 @@ font-size:22px;
 color:#6b6b6b;
 margin-bottom:40px;
 }
+
+/* timeline */
 
 .timeline{
 display:flex;
@@ -54,7 +70,6 @@ text-align:center;
 
 .arrow{
 font-size:40px;
-text-align:center;
 }
 
 .section{
@@ -141,61 +156,59 @@ Pour moi la data c'est un peu de la **magie** : on part de quelque chose de brou
 Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des questions et trouver des insights qui permettent de mieux comprendre les problèmes.
 """)
 
-# ---------------- TOOLS RADAR ---------------- #
+    # radar charts
 
     with col2:
 
-        tools = pd.DataFrame({
-            "tool":[
-                "Python",
-                "SQL",
-                "Power BI",
-                "Excel",
-                "Talend",
-                "Snowflake",
-                "DataGalaxy",
-                "Confluence",
-                "R"
-            ],
-            "score":[
-                3,
-                4,
-                4,
-                3,
-                3,
-                3,
-                2,
-                2,
-                2
-            ]
+        radar1, radar2 = st.columns(2)
+
+        # DATA ANALYSIS
+
+        data_analysis = pd.DataFrame({
+            "tool":["Python","SQL","Excel","R"],
+            "score":[3,4,3,2]
         })
 
-        fig = px.line_polar(
-            tools,
+        fig1 = px.line_polar(
+            data_analysis,
             r="score",
             theta="tool",
             line_close=True
         )
 
-        fig.update_traces(fill='toself')
+        fig1.update_traces(fill='toself')
 
-        fig.update_layout(
-
+        fig1.update_layout(
             showlegend=False,
-
             paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-
-            polar=dict(
-                bgcolor="rgba(0,0,0,0)",
-                radialaxis=dict(
-                    visible=True,
-                    range=[0,4]
-                )
-            )
+            polar=dict(bgcolor="rgba(0,0,0,0)", radialaxis=dict(range=[0,4]))
         )
 
-        st.plotly_chart(fig,use_container_width=True)
+        radar1.plotly_chart(fig1,use_container_width=True)
+
+        # DATA STACK
+
+        stack = pd.DataFrame({
+            "tool":["Snowflake","Talend","Power BI","DataGalaxy","Confluence"],
+            "score":[3,3,4,2,2]
+        })
+
+        fig2 = px.line_polar(
+            stack,
+            r="score",
+            theta="tool",
+            line_close=True
+        )
+
+        fig2.update_traces(fill='toself')
+
+        fig2.update_layout(
+            showlegend=False,
+            paper_bgcolor="rgba(0,0,0,0)",
+            polar=dict(bgcolor="rgba(0,0,0,0)", radialaxis=dict(range=[0,4]))
+        )
+
+        radar2.plotly_chart(fig2,use_container_width=True)
 
 # ---------------- CHIFFRES ---------------- #
 
@@ -231,12 +244,8 @@ elif page == "Voyages":
             "Mauritanie","Italie","Portugal","Espagne",
             "Angleterre","Sénégal","Maroc","Malte","Thaïlande"
         ],
-        "lat":[
-            20.25,41.90,38.72,40.41,51.50,14.69,33.57,35.90,13.75
-        ],
-        "lon":[
-            -10.32,12.49,-9.13,-3.70,-0.12,-17.44,-7.59,14.51,100.50
-        ]
+        "lat":[20.25,41.90,38.72,40.41,51.50,14.69,33.57,35.90,13.75],
+        "lon":[-10.32,12.49,-9.13,-3.70,-0.12,-17.44,-7.59,14.51,100.50]
     })
 
     fig = px.scatter_geo(
