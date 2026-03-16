@@ -11,49 +11,68 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-body {
-background-color: #ffffff;
+/* Background général */
+.stApp {
+    background-color: #fafafa;
 }
 
+/* Titres */
+
 .big-title {
-font-size:50px;
+font-size:64px;
 font-weight:700;
+margin-bottom:10px;
 }
 
 .subtitle {
-font-size:22px;
-color:grey;
+font-size:28px;
+color:#6b7280;
 margin-bottom:40px;
 }
 
-.section {
-margin-top:60px;
+/* texte général */
+
+p, li {
+font-size:18px;
 }
 
+/* sections */
+
+.section {
+margin-top:70px;
+}
+
+/* KPI */
+
 .kpi-card {
-background-color:#f6f7fb;
-padding:25px;
-border-radius:12px;
+background-color:white;
+padding:30px;
+border-radius:16px;
 text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.06);
 }
 
 .kpi-number {
-font-size:35px;
+font-size:42px;
 font-weight:700;
 }
 
 .kpi-label {
-color:grey;
+color:#6b7280;
+font-size:18px;
 }
 
+/* timeline */
+
 .timeline {
-border-left: 3px solid #4A90E2;
-padding-left:20px;
+border-left: 3px solid #2563eb;
+padding-left:25px;
 margin-top:20px;
 }
 
 .timeline-item {
-margin-bottom:20px;
+margin-bottom:25px;
+font-size:18px;
 }
 
 </style>
@@ -71,7 +90,7 @@ col1, col2 = st.columns([1,2])
 with col1:
 
     try:
-        st.image("photo.jpg", width=220)
+        st.image("photo.jpg", width=250)
     except:
         st.write("📷 Photo coming soon")
 
@@ -89,14 +108,14 @@ J’aime explorer les données, comprendre les phénomènes et créer des visual
 **Tools:** Python | SQL | Power BI | Excel
 """)
 
-# -------- KPI DASHBOARD -------- #
+# -------- KPI -------- #
 
 st.markdown('<div class="section"></div>', unsafe_allow_html=True)
 st.subheader("About me in numbers")
 
-kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+k1, k2, k3, k4 = st.columns(4)
 
-with kpi1:
+with k1:
     st.markdown("""
     <div class="kpi-card">
     <div class="kpi-number">4</div>
@@ -104,7 +123,7 @@ with kpi1:
     </div>
     """, unsafe_allow_html=True)
 
-with kpi2:
+with k2:
     st.markdown("""
     <div class="kpi-card">
     <div class="kpi-number">15+</div>
@@ -112,7 +131,7 @@ with kpi2:
     </div>
     """, unsafe_allow_html=True)
 
-with kpi3:
+with k3:
     st.markdown("""
     <div class="kpi-card">
     <div class="kpi-number">20+</div>
@@ -120,14 +139,13 @@ with kpi3:
     </div>
     """, unsafe_allow_html=True)
 
-with kpi4:
+with k4:
     st.markdown("""
     <div class="kpi-card">
     <div class="kpi-number">3</div>
     <div class="kpi-label">Languages spoken</div>
     </div>
     """, unsafe_allow_html=True)
-
 
 # -------- JOURNEY -------- #
 
