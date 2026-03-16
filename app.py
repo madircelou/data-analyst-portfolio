@@ -40,25 +40,10 @@ margin-bottom:40px;
 
 /* timeline */
 
-.timeline-container{
-position:relative;
-margin-top:50px;
-margin-bottom:50px;
-}
-
-.timeline-line{
-height:4px;
-background:#c7c7c7;
-position:absolute;
-top:40px;
-left:5%;
-right:5%;
-}
-
 .timeline{
 display:flex;
 justify-content:space-between;
-position:relative;
+margin-top:50px;
 }
 
 .step{
@@ -68,14 +53,13 @@ border-radius:10px;
 width:22%;
 text-align:center;
 box-shadow:0 4px 12px rgba(0,0,0,0.08);
+transition:0.2s;
+cursor:pointer;
 }
 
-.dot{
-width:16px;
-height:16px;
-background:#1f77b4;
-border-radius:50%;
-margin:0 auto 10px auto;
+.step:hover{
+transform:translateY(-5px);
+box-shadow:0 6px 16px rgba(0,0,0,0.15);
 }
 
 /* sections */
@@ -119,45 +103,41 @@ if page == "Accueil":
     st.markdown("### Mon parcours")
 
     st.markdown("""
-<div class="timeline-container">
-
-<div class="timeline-line"></div>
-
 <div class="timeline">
 
+<a href="https://fr.wikipedia.org/wiki/Baccalauréat_en_France" target="_blank" style="text-decoration:none;color:inherit">
 <div class="step">
-<div class="dot"></div>
 <b>2020</b><br>
 Bac ES<br>
 Spécialité Maths
 </div>
+</a>
 
+<a href="https://www.u-bordeaux.fr/" target="_blank" style="text-decoration:none;color:inherit">
 <div class="step">
-<div class="dot"></div>
 <b>2020-2024</b><br>
 Licence MIASHS<br>
 Université de Bordeaux
 </div>
+</a>
 
+<a href="https://www.domofrance.fr/" target="_blank" style="text-decoration:none;color:inherit">
 <div class="step">
-<div class="dot"></div>
 <b>2024-Aujourd'hui</b><br>
 Alternante Data Analyst<br>
 Domofrance
 </div>
+</a>
 
 <div class="step">
-<div class="dot"></div>
 <b>What's next ?</b><br>
 La suite reste à écrire
 </div>
 
 </div>
-
-</div>
 """, unsafe_allow_html=True)
 
-# ---------------- ABOUT + RADAR ---------------- #
+# ---------------- ABOUT + RADARS ---------------- #
 
     st.markdown('<div class="section"></div>', unsafe_allow_html=True)
 
@@ -172,7 +152,8 @@ Enchantée !
 
 Actuellement **en alternance en data**, je suis toujours à la recherche de nouveaux sujets à explorer.
 
-J’ai grandi en changeant souvent d’environnement : j’ai vécu **au Maroc, en Mauritanie, au Sénégal, à Paris**, et aujourd’hui à Bordeaux.  
+J’ai grandi en changeant souvent d’environnement : j’ai vécu **au Maroc, en Mauritanie, au Sénégal, à Paris**, et aujourd’hui à Bordeaux.
+
 Ces expériences m’ont appris à observer, m’adapter et comprendre des contextes très différents — un peu comme lorsqu’on explore un dataset inconnu.
 
 Curieuse et motivée, j’aime jouer avec la donnée et essayer de comprendre ce qu’elle raconte.
@@ -203,7 +184,7 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
         fig1.update_traces(
             fill='toself',
             line_color="#1f77b4",
-            fillcolor="rgba(31,119,180,0.35)"
+            fillcolor="rgba(31,119,180,0.4)"
         )
 
         fig1.update_layout(
@@ -211,7 +192,15 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
             paper_bgcolor="rgba(0,0,0,0)",
             polar=dict(
                 bgcolor="rgba(0,0,0,0)",
-                radialaxis=dict(range=[0,4])
+                radialaxis=dict(
+                    visible=True,
+                    range=[0,4],
+                    gridcolor="#bdbdbd",
+                    tickfont=dict(color="#1f1f1f")
+                ),
+                angularaxis=dict(
+                    tickfont=dict(color="#1f1f1f")
+                )
             )
         )
 
@@ -234,7 +223,7 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
         fig2.update_traces(
             fill='toself',
             line_color="#ff7f0e",
-            fillcolor="rgba(255,127,14,0.35)"
+            fillcolor="rgba(255,127,14,0.4)"
         )
 
         fig2.update_layout(
@@ -242,7 +231,15 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
             paper_bgcolor="rgba(0,0,0,0)",
             polar=dict(
                 bgcolor="rgba(0,0,0,0)",
-                radialaxis=dict(range=[0,4])
+                radialaxis=dict(
+                    visible=True,
+                    range=[0,4],
+                    gridcolor="#bdbdbd",
+                    tickfont=dict(color="#1f1f1f")
+                ),
+                angularaxis=dict(
+                    tickfont=dict(color="#1f1f1f")
+                )
             )
         )
 
@@ -268,8 +265,6 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
 elif page == "Projets":
 
     st.title("Projets")
-
-    st.write("Les projets data seront présentés ici.")
 
 # =====================================================
 # VOYAGES
