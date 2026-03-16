@@ -38,45 +38,18 @@ color:#6b6b6b;
 margin-bottom:40px;
 }
 
-/* timeline */
+/* cards */
 
-.timeline{
-display:flex;
-justify-content:space-between;
-margin-top:50px;
-}
-
-.step{
+.card{
 background:white;
 padding:20px;
 border-radius:10px;
-width:22%;
-text-align:center;
 box-shadow:0 4px 12px rgba(0,0,0,0.08);
-transition:0.2s;
-cursor:pointer;
+text-align:center;
 }
-
-.step:hover{
-transform:translateY(-5px);
-box-shadow:0 6px 16px rgba(0,0,0,0.15);
-}
-
-/* sections */
 
 .section{
-margin-top:70px;
-}
-
-/* metrics */
-
-[data-testid="stMetricValue"]{
-color:#1f1f1f;
-font-size:35px;
-}
-
-[data-testid="stMetricLabel"]{
-color:#555;
+margin-top:60px;
 }
 
 </style>
@@ -102,38 +75,40 @@ if page == "Accueil":
 
     st.markdown("### Mon parcours")
 
-    st.markdown("""
-<div class="timeline">
+    c1,c2,c3,c4 = st.columns(4)
 
-<a href="https://fr.wikipedia.org/wiki/Baccalauréat_en_France" target="_blank" style="text-decoration:none;color:inherit">
-<div class="step">
+    with c1:
+        st.markdown("""
+<div class="card">
 <b>2020</b><br>
 Bac ES<br>
 Spécialité Maths
 </div>
-</a>
+""", unsafe_allow_html=True)
 
-<a href="https://www.u-bordeaux.fr/" target="_blank" style="text-decoration:none;color:inherit">
-<div class="step">
+    with c2:
+        st.markdown("""
+<div class="card">
 <b>2020-2024</b><br>
 Licence MIASHS<br>
 Université de Bordeaux
 </div>
-</a>
+""", unsafe_allow_html=True)
 
-<a href="https://www.domofrance.fr/" target="_blank" style="text-decoration:none;color:inherit">
-<div class="step">
+    with c3:
+        st.markdown("""
+<div class="card">
 <b>2024-Aujourd'hui</b><br>
 Alternante Data Analyst<br>
 Domofrance
 </div>
-</a>
+""", unsafe_allow_html=True)
 
-<div class="step">
+    with c4:
+        st.markdown("""
+<div class="card">
 <b>What's next ?</b><br>
 La suite reste à écrire
-</div>
-
 </div>
 """, unsafe_allow_html=True)
 
@@ -165,7 +140,7 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
 
     with col2:
 
-        radar1, radar2 = st.columns(2)
+        r1,r2 = st.columns(2)
 
         # DATA ANALYSIS
 
@@ -192,19 +167,11 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
             paper_bgcolor="rgba(0,0,0,0)",
             polar=dict(
                 bgcolor="rgba(0,0,0,0)",
-                radialaxis=dict(
-                    visible=True,
-                    range=[0,4],
-                    gridcolor="#bdbdbd",
-                    tickfont=dict(color="#1f1f1f")
-                ),
-                angularaxis=dict(
-                    tickfont=dict(color="#1f1f1f")
-                )
+                radialaxis=dict(range=[0,4])
             )
         )
 
-        radar1.plotly_chart(fig1,use_container_width=True)
+        r1.plotly_chart(fig1,use_container_width=True)
 
         # DATA STACK
 
@@ -231,19 +198,11 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
             paper_bgcolor="rgba(0,0,0,0)",
             polar=dict(
                 bgcolor="rgba(0,0,0,0)",
-                radialaxis=dict(
-                    visible=True,
-                    range=[0,4],
-                    gridcolor="#bdbdbd",
-                    tickfont=dict(color="#1f1f1f")
-                ),
-                angularaxis=dict(
-                    tickfont=dict(color="#1f1f1f")
-                )
+                radialaxis=dict(range=[0,4])
             )
         )
 
-        radar2.plotly_chart(fig2,use_container_width=True)
+        r2.plotly_chart(fig2,use_container_width=True)
 
 # ---------------- CHIFFRES ---------------- #
 
@@ -251,12 +210,12 @@ Sur ce site, je vous propose donc de découvrir **ma vie à travers la data** : 
 
     st.markdown("### Quelques chiffres")
 
-    c1,c2,c3,c4 = st.columns(4)
+    m1,m2,m3,m4 = st.columns(4)
 
-    c1.metric("Années dans la data","4")
-    c2.metric("Dashboards réalisés","15+")
-    c3.metric("Datasets explorés","20+")
-    c4.metric("Pays visités","9")
+    m1.metric("Années dans la data","4")
+    m2.metric("Dashboards réalisés","15+")
+    m3.metric("Datasets explorés","20+")
+    m4.metric("Pays visités","9")
 
 # =====================================================
 # PROJETS
