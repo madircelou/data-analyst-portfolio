@@ -322,23 +322,28 @@ if page == "Accueil":
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
         <style>
           * { box-sizing: border-box; margin:0; padding:0; }
-          body { background: #f4f1ed; font-family: 'DM Sans', sans-serif; }
-          .wrap { display: flex; gap: 12px; padding: 4px 0 8px; }
+          html, body { background: #f4f1ed; font-family: 'DM Sans', sans-serif; }
+          .wrap { display: flex; gap: 8px; width: 100%; }
           .chart-box { flex: 1; text-align: center; }
           .chart-label {
             font-size: 10px; font-weight: 500;
             letter-spacing: 0.18em; text-transform: uppercase;
             color: #7a7a7a; margin-bottom: 6px;
           }
+          .canvas-wrap {
+            position: relative;
+            width: 100%;
+            height: 280px;
+          }
         </style>
         <div class="wrap">
           <div class="chart-box">
             <div class="chart-label">Langages</div>
-            <canvas id="r1"></canvas>
+            <div class="canvas-wrap"><canvas id="r1"></canvas></div>
           </div>
           <div class="chart-box">
             <div class="chart-label">Outils métier</div>
-            <canvas id="r2"></canvas>
+            <div class="canvas-wrap"><canvas id="r2"></canvas></div>
           </div>
         </div>
         <script>
@@ -346,6 +351,7 @@ if page == "Accueil":
             type: 'radar',
             options: {
               responsive: true,
+              maintainAspectRatio: false,
               plugins: { legend: { display: false } },
               scales: {
                 r: {
@@ -354,8 +360,9 @@ if page == "Accueil":
                   grid: { color: '#e0dcd6' },
                   angleLines: { color: '#e0dcd6' },
                   pointLabels: {
-                    font: { family: 'DM Sans', size: 11 },
-                    color: '#1c1c1c'
+                    font: { family: 'DM Sans', size: 12 },
+                    color: '#1c1c1c',
+                    padding: 12
                   }
                 }
               }
@@ -392,7 +399,7 @@ if page == "Accueil":
             }
           });
         </script>
-        """, height=280)
+        """, height=320)
 
     # ── STATS ─────────────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
