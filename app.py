@@ -392,8 +392,8 @@ if page == "Accueil":
         with r_col1:
             st.markdown('<div class="radar-label">Langages</div>', unsafe_allow_html=True)
             data_analysis = pd.DataFrame({
-                "tool": ["Python", "SQL", "R"],
-                "score": [3, 4, 3]
+                "tool": ["Python", "SQL", "R", "Excel"],
+                "score": [3, 4, 3,3]
             })
             fig1 = px.line_polar(data_analysis, r="score", theta="tool", line_close=True)
             fig1.update_traces(
