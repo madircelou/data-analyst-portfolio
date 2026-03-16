@@ -91,25 +91,18 @@ if page == "Home":
     col1, col2 = st.columns([1,2])
 
     with col1:
-
         try:
             st.image("photo.jpg", width=250)
         except:
             st.write("📷 Photo coming soon")
 
     with col2:
-
         st.markdown("""
 ### About me
 
-Data analyst passionate about turning data into insights.
+Data analyst with a background in **Mathematics & Applied Data Analysis**.
 
-Background in **Mathematics & Applied Data Analysis**.
-
-I work on:
-- data analysis
-- dashboards
-- business insights
+I enjoy exploring datasets, building dashboards and transforming complex data into **clear insights that support decision-making**.
 
 **Tools**
 
@@ -153,8 +146,8 @@ Excel
     with k4:
         st.markdown("""
         <div class="kpi-card">
-        <div class="kpi-number">3</div>
-        <div class="kpi-label">Languages spoken</div>
+        <div class="kpi-number">9</div>
+        <div class="kpi-label">Countries visited</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -172,7 +165,7 @@ Excel
 
 <div class="timeline-item">
 <b>2020 - 2024</b> – Université de Bordeaux  
-Licence Mathématiques & Informatique appliquées
+Licence Mathématiques & Informatique appliquées aux Sciences Sociales
 </div>
 
 <div class="timeline-item">
@@ -182,7 +175,7 @@ Licence Mathématiques & Informatique appliquées
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- GRAPH ---------------- #
+# ---------------- DATA GRAPH ---------------- #
 
     st.markdown('<div class="section"></div>', unsafe_allow_html=True)
     st.subheader("About me in data")
@@ -195,7 +188,7 @@ Licence Mathématiques & Informatique appliquées
             "Countries visited",
             "Books per year"
         ],
-        "Value":[4,15,20,10,12]
+        "Value":[4,15,20,9,12]
     })
 
     fig = px.bar(
@@ -204,8 +197,17 @@ Licence Mathématiques & Informatique appliquées
         y="Category",
         orientation="h",
         color="Value",
+        text="Value",
         color_continuous_scale="Brwnyl"
     )
+
+    fig.update_layout(
+        plot_bgcolor="white",
+        paper_bgcolor="#f4f1ed",
+        coloraxis_showscale=False
+    )
+
+    fig.update_traces(textposition="outside")
 
     st.plotly_chart(fig,use_container_width=True)
 
@@ -229,7 +231,7 @@ Goal
 Understand price drivers in European cities.
 
 Tools  
-Python, Pandas, Visualization
+Python, Pandas, Data Visualization
 
 </div>
 """, unsafe_allow_html=True)
@@ -243,7 +245,7 @@ Python, Pandas, Visualization
 Analysis of movie duration and genre evolution.
 
 Tools  
-Python, Data Visualization
+Python, Visualization
 
 </div>
 """, unsafe_allow_html=True)
@@ -257,12 +259,32 @@ elif page == "Travel Analytics":
     st.title("Travel Analytics")
 
     travel = pd.DataFrame({
-        "city":["Lisbon","Rome","Barcelona","Amsterdam"],
-        "lat":[38.72,41.90,41.38,52.37],
-        "lon":[-9.13,12.49,2.17,4.89]
+        "country":[
+            "Mauritania","Italy","Portugal","Spain",
+            "United Kingdom","Senegal","Morocco","Malta","Thailand"
+        ],
+        "lat":[
+            20.25,41.90,38.72,40.41,51.50,14.69,33.57,35.90,13.75
+        ],
+        "lon":[
+            -10.32,12.49,-9.13,-3.70,-0.12,-17.44,-7.59,14.51,100.50
+        ]
     })
 
-    st.map(travel)
+    fig = px.scatter_geo(
+        travel,
+        lat="lat",
+        lon="lon",
+        hover_name="country",
+        projection="natural earth"
+    )
+
+    fig.update_layout(
+        height=600,
+        margin={"r":0,"t":0,"l":0,"b":0}
+    )
+
+    st.plotly_chart(fig,use_container_width=True)
 
 # =====================================================
 # DATA EXPERIMENTS
@@ -272,4 +294,11 @@ elif page == "Data Experiments":
 
     st.title("Data Experiments")
 
-    st.write("Small data explorations and experiments.")
+    st.write("""
+This section will contain small data explorations.
+
+Examples:
+- Spotify data analysis
+- Movie trends
+- Paris open data
+""")
