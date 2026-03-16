@@ -96,7 +96,7 @@ if page == "Home":
         except:
             st.write("📷 Photo coming soon")
 
- with col2:
+    with col2:
     st.markdown("""
 ### About me
 
