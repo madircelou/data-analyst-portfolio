@@ -370,7 +370,7 @@ if page == "Accueil":
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
             margin=dict(t=30, b=10, l=10, r=10),
-            height=260,
+            height=270,
             font=dict(color="#1c1c1c", family="DM Sans"),
             polar=dict(
                 bgcolor="rgba(0,0,0,0)",
@@ -392,8 +392,8 @@ if page == "Accueil":
         with r_col1:
             st.markdown('<div class="radar-label">Langages</div>', unsafe_allow_html=True)
             data_analysis = pd.DataFrame({
-                "tool": ["Python", "SQL", "Excel", "R"],
-                "score": [3, 4, 3, 2]
+                "tool": ["Python", "SQL", "R"],
+                "score": [3, 4, 3]
             })
             fig1 = px.line_polar(data_analysis, r="score", theta="tool", line_close=True)
             fig1.update_traces(
