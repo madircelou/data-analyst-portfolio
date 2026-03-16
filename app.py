@@ -6,29 +6,34 @@ import plotly.express as px
 st.set_page_config(
     page_title="Elodie Marcouire | Portfolio",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
+
+# ─────────────────────────────────────────────
+# SESSION STATE — page active
+# ─────────────────────────────────────────────
+if "page" not in st.session_state:
+    st.session_state.page = "Accueil"
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
 # ─────────────────────────────────────────────
-
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
-header {visibility:hidden;}
-footer {visibility:hidden;}
-#MainMenu {visibility:hidden;}
+header, footer, #MainMenu { visibility: hidden; }
+[data-testid="stSidebar"] { display: none; }
+section[data-testid="stSidebarNav"] { display: none; }
 
 :root {
-    --cream:   #f4f1ed;
-    --ink:     #1c1c1c;
-    --muted:   #7a7a7a;
-    --coral:   #d95f4b;
-    --sage:    #7a9e7e;
-    --gold:    #c9a84c;
-    --white:   #ffffff;
+    --cream: #f4f1ed;
+    --ink:   #1c1c1c;
+    --muted: #7a7a7a;
+    --coral: #d95f4b;
+    --sage:  #7a9e7e;
+    --gold:  #c9a84c;
+    --white: #ffffff;
 }
 
 .stApp {
@@ -37,23 +42,10 @@ footer {visibility:hidden;}
     font-family: 'DM Sans', sans-serif;
 }
 
-[data-testid="stSidebar"] {
-    background-color: var(--ink) !important;
-}
-[data-testid="stSidebar"] * {
-    color: var(--white) !important;
-}
-[data-testid="stSidebar"] .stRadio label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 6px 0;
-}
-
+/* ── Hero ── */
 .hero-wrap {
     text-align: center;
-    padding: 60px 20px 10px;
+    padding: 60px 20px 20px;
     border-bottom: 1px solid #ddd;
     margin-bottom: 50px;
 }
@@ -66,154 +58,138 @@ footer {visibility:hidden;}
     color: var(--ink);
 }
 .hero-subtitle {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 300;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 12px;
+    font-size: 15px; font-weight: 300;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--muted); margin-top: 14px;
 }
 .hero-accent {
     display: inline-block;
-    width: 40px;
-    height: 3px;
+    width: 40px; height: 3px;
     background: var(--coral);
     margin: 18px auto 0;
 }
 
+/* ── Sections ── */
 .section-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--coral);
-    margin-bottom: 8px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--coral); margin-bottom: 6px;
 }
 .section-title {
     font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 30px;
+    font-size: 30px; font-weight: 700;
+    color: var(--ink); margin-bottom: 28px;
 }
 
+/* ── Bio card ── */
 .bio-card {
     background: var(--white);
     border-radius: 12px;
     padding: 36px 40px;
     box-shadow: 0 2px 24px rgba(0,0,0,0.06);
-    line-height: 1.85;
-    font-size: 15px;
-    color: #333;
+    line-height: 1.85; font-size: 15px; color: #333;
 }
 .bio-card strong { color: var(--ink); font-weight: 500; }
 .bio-highlight {
     display: inline-block;
-    background: #fdf3e7;
-    color: var(--coral);
-    font-weight: 500;
-    padding: 1px 8px;
-    border-radius: 4px;
+    background: #fdf3e7; color: var(--coral);
+    font-weight: 500; padding: 1px 8px; border-radius: 4px;
 }
 
-.radar-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: center;
-    margin-bottom: 4px;
-}
-
-.stat-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-top: 10px;
-}
-.stat-card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 28px 20px;
-    text-align: center;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-    border-top: 3px solid var(--coral);
-}
-.stat-number {
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1;
-    margin-bottom: 8px;
-}
-.stat-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-.stat-card:nth-child(2) { border-color: var(--sage); }
-.stat-card:nth-child(3) { border-color: var(--gold); }
-.stat-card:nth-child(4) { border-color: #9b8fcf; }
-
+/* ── Projet card ── */
 .projet-card {
-    background: var(--white);
-    border-radius: 12px;
+    background: var(--white); border-radius: 12px;
     padding: 28px 30px;
     box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-    margin-bottom: 16px;
-    border-left: 4px solid var(--coral);
+    margin-bottom: 16px; border-left: 4px solid var(--coral);
 }
 .projet-title {
     font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 8px;
+    font-size: 20px; font-weight: 700;
+    color: var(--ink); margin-bottom: 8px;
 }
 .projet-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 .tag {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    background: var(--cream);
-    color: var(--muted);
-    border: 1px solid #ddd;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px;
+    background: var(--cream); color: var(--muted); border: 1px solid #ddd;
 }
 
+/* ── Nav buttons reset ── */
+div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button {
+    background: #1c1c1c !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: rgba(255,255,255,0.55) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2em !important;
+    text-transform: uppercase !important;
+    padding: 14px 8px !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    transition: color 0.15s !important;
+}
+div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {
+    color: white !important;
+    background: #1c1c1c !important;
+}
+
+/* ── Map intro ── */
 .map-intro {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--muted);
-    max-width: 600px;
-    margin-bottom: 24px;
-    line-height: 1.7;
+    font-size: 15px; color: var(--muted);
+    max-width: 600px; margin-bottom: 24px; line-height: 1.7;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# NAVIGATION
+# TOP NAVIGATION BAR
 # ─────────────────────────────────────────────
+nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
 
-page = st.sidebar.radio(
-    "Navigation",
-    ["Accueil", "Projets", "Voyages", "Expérimentations"]
-)
+# Barre noire en HTML pur pour le fond + logo
+st.markdown("""
+<div style="
+    background:#1c1c1c;
+    padding:0 32px;
+    display:flex;
+    align-items:center;
+    margin: -1rem -1rem 0 -4rem;
+    height:52px;
+">
+    <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:white;letter-spacing:-0.01em;margin-right:auto;">
+        E. Marcouire
+    </span>
+</div>
+""", unsafe_allow_html=True)
+
+# Boutons de navigation Streamlit (fonctionnels) dans la même barre
+col_logo, col1, col2, col3, col4 = st.columns([4, 1, 1, 1, 1.5])
+
+with col_logo:
+    # espace vide pour pousser les boutons à droite
+    st.markdown(
+        '<div style="background:#1c1c1c;height:50px;margin-top:-52px;"></div>',
+        unsafe_allow_html=True
+    )
+
+for col, item in zip([col1, col2, col3, col4], nav_items):
+    with col:
+        active = st.session_state.page == item
+        # Surlignage si actif
+        border = "border-bottom: 2px solid #d95f4b; color: white !important;" if active else ""
+        if st.button(item, key=f"nav_{item}"):
+            st.session_state.page = item
+            st.rerun()
+
+page = st.session_state.page
 
 # ─────────────────────────────────────────────
 # ACCUEIL
 # ─────────────────────────────────────────────
-
 if page == "Accueil":
 
     st.markdown("""
@@ -233,51 +209,37 @@ if page == "Accueil":
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body { background: #f4f1ed; }
-      .tl {
-        display: flex;
-        overflow-x: auto;
-        padding: 10px 4px 28px;
-      }
+      .tl { display: flex; overflow-x: auto; padding: 10px 4px 28px; }
       .tl-item {
-        flex: 1;
-        min-width: 155px;
-        position: relative;
-        padding: 26px 12px 16px;
+        flex: 1; min-width: 150px;
+        position: relative; padding: 26px 12px 16px;
       }
       .tl-item::before {
-        content: "";
-        position: absolute;
+        content: ""; position: absolute;
         top: 19px; left: 0; right: 0;
-        height: 2px;
-        background: #d9d5cf;
+        height: 2px; background: #d9d5cf;
       }
       .tl-item:first-child::before { left: 50%; }
       .tl-item:last-child::before  { right: 50%; }
       .tl-dot {
-        width: 14px; height: 14px;
-        border-radius: 50%;
-        background: #d95f4b;
-        border: 3px solid #f4f1ed;
+        width: 14px; height: 14px; border-radius: 50%;
+        background: #d95f4b; border: 3px solid #f4f1ed;
         box-shadow: 0 0 0 2px #d95f4b;
-        margin: 0 auto 16px;
-        position: relative;
-        z-index: 1;
+        margin: 0 auto 16px; position: relative; z-index: 1;
       }
-      .tl-item.current .tl-dot { background: #7a9e7e; box-shadow: 0 0 0 2px #7a9e7e; }
-      .tl-item.future  .tl-dot { background: transparent; border-color: #ccc; box-shadow: 0 0 0 2px #ccc; }
+      .current .tl-dot { background: #7a9e7e; box-shadow: 0 0 0 2px #7a9e7e; }
+      .future  .tl-dot { background: transparent; border-color: #ccc; box-shadow: 0 0 0 2px #ccc; }
       .tl-year {
         font-family: 'Playfair Display', serif;
-        font-size: 20px; font-weight: 700;
-        color: #1c1c1c;
-        text-align: center; margin-bottom: 6px;
+        font-size: 19px; font-weight: 700;
+        color: #1c1c1c; text-align: center; margin-bottom: 6px;
       }
-      .tl-item.current .tl-year { color: #7a9e7e; }
-      .tl-item.future  .tl-year { color: #7a7a7a; font-style: italic; }
+      .current .tl-year { color: #7a9e7e; }
+      .future  .tl-year { color: #7a7a7a; font-style: italic; }
       .tl-role {
         font-family: 'DM Sans', sans-serif;
         font-size: 12px; font-weight: 500;
-        color: #1c1c1c;
-        text-align: center; margin-bottom: 4px;
+        color: #1c1c1c; text-align: center; margin-bottom: 4px;
       }
       .tl-detail {
         font-family: 'DM Sans', sans-serif;
@@ -328,7 +290,6 @@ if page == "Accueil":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # ── BIO + RADARS ──────────────────────────
-    # Layout : bio à gauche (col large), radars côte à côte à droite
     col_bio, col_radar = st.columns([3, 2], gap="large")
 
     with col_bio:
@@ -336,25 +297,18 @@ if page == "Accueil":
         st.markdown('<div class="section-title">Qui suis-je ?</div>', unsafe_allow_html=True)
         st.markdown("""
         <div class="bio-card">
-            <p>
-                J'ai grandi entre le <strong>Maroc, la Mauritanie et le Sénégal</strong>
-                avant de poser mes valises à Bordeaux pour ma licence
-                <span class="bio-highlight">MIASHS</span>.
-                Cette enfance nomade m'a appris une chose essentielle :
-                comprendre rapidement un contexte inconnu — une compétence
-                précieuse quand on explore un nouveau dataset.
-            </p>
-            <p>
-                Aujourd'hui <strong>alternante Data Analyst chez Domofrance</strong>,
-                je travaille au quotidien avec <span class="bio-highlight">Power BI · Snowflake · Talend</span>
-                pour transformer des données brutes en tableaux de bord actionnables.
-                J'interviens sur toute la chaîne : collecte, modélisation, visualisation et documentation.
-            </p>
-            <p>
-                Ce qui me motive ? Ce moment un peu magique où un dataset chaotique
-                révèle soudainement un pattern. Je construis ce portfolio pour raconter
-                cette aventure — parce que la donnée, c'est d'abord une <strong>histoire à raconter</strong>.
-            </p>
+            <p>J'ai grandi entre le <strong>Maroc, la Mauritanie et le Sénégal</strong>
+            avant de poser mes valises à Bordeaux pour ma licence
+            <span class="bio-highlight">MIASHS</span>.
+            Cette enfance nomade m'a appris une chose essentielle :
+            comprendre rapidement un contexte inconnu — une compétence
+            précieuse quand on explore un nouveau dataset.</p>
+            <p style="margin-top:16px;">Aujourd'hui <strong>alternante Data Analyst chez Domofrance</strong>,
+            je travaille au quotidien avec <span class="bio-highlight">Power BI · Snowflake · Talend</span>
+            pour transformer des données brutes en tableaux de bord actionnables.
+            J'interviens sur toute la chaîne : collecte, modélisation, visualisation et documentation.</p>
+            <p style="margin-top:16px;">Ce qui me motive ? Ce moment un peu magique où un dataset chaotique
+            révèle soudainement un pattern — parce que la donnée, c'est d'abord une <strong>histoire à raconter</strong>.</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -362,62 +316,83 @@ if page == "Accueil":
         st.markdown('<div class="section-label">Compétences</div>', unsafe_allow_html=True)
         st.markdown('<div class="section-title">Stack</div>', unsafe_allow_html=True)
 
-        # ── Les deux radars côte à côte dans des sous-colonnes ──
-        r_col1, r_col2 = st.columns(2)
+        # Deux radars Chart.js côte à côte dans un seul composant = zéro problème de layout
+        components.html("""
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+        <style>
+          * { box-sizing: border-box; margin:0; padding:0; }
+          body { background: #f4f1ed; font-family: 'DM Sans', sans-serif; }
+          .wrap { display: flex; gap: 12px; padding: 4px 0 8px; }
+          .chart-box { flex: 1; text-align: center; }
+          .chart-label {
+            font-size: 10px; font-weight: 500;
+            letter-spacing: 0.18em; text-transform: uppercase;
+            color: #7a7a7a; margin-bottom: 6px;
+          }
+        </style>
+        <div class="wrap">
+          <div class="chart-box">
+            <div class="chart-label">Langages</div>
+            <canvas id="r1"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-label">Outils métier</div>
+            <canvas id="r2"></canvas>
+          </div>
+        </div>
+        <script>
+          const radarOpts = {
+            type: 'radar',
+            options: {
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: {
+                r: {
+                  min: 0, max: 4,
+                  ticks: { display: false, stepSize: 1 },
+                  grid: { color: '#e0dcd6' },
+                  angleLines: { color: '#e0dcd6' },
+                  pointLabels: {
+                    font: { family: 'DM Sans', size: 11 },
+                    color: '#1c1c1c'
+                  }
+                }
+              }
+            }
+          };
 
-        RADAR_LAYOUT = dict(
-            showlegend=False,
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            margin=dict(t=30, b=10, l=10, r=10),
-            height=300,
-            font=dict(color="#1c1c1c", family="DM Sans"),
-            polar=dict(
-                bgcolor="rgba(0,0,0,0)",
-                radialaxis=dict(
-                    range=[0, 4],
-                    tickfont=dict(color="#7a7a7a", size=9),
-                    gridcolor="#e0dcd6",
-                    linecolor="#e0dcd6",
-                    showticklabels=False,
-                ),
-                angularaxis=dict(
-                    tickfont=dict(color="#1c1c1c", size=11),
-                    linecolor="#e0dcd6",
-                    gridcolor="#e0dcd6",
-                )
-            )
-        )
+          new Chart(document.getElementById('r1'), {
+            ...radarOpts,
+            data: {
+              labels: ['Python', 'SQL', 'Excel', 'R'],
+              datasets: [{
+                data: [3, 4, 3, 2],
+                backgroundColor: 'rgba(217,95,75,0.2)',
+                borderColor: '#d95f4b',
+                borderWidth: 2,
+                pointBackgroundColor: '#d95f4b',
+                pointRadius: 3
+              }]
+            }
+          });
 
-        with r_col1:
-            st.markdown('<div class="radar-label">Langages</div>', unsafe_allow_html=True)
-            data_analysis = pd.DataFrame({
-                "tool": ["Python", "SQL", "R", "Excel"],
-                "score": [3, 4, 2, 3]
-            })
-            fig1 = px.line_polar(data_analysis, r="score", theta="tool", line_close=True)
-            fig1.update_traces(
-                fill='toself',
-                line_color="#d95f4b",
-                fillcolor="rgba(217,95,75,0.25)"
-            )
-            fig1.update_layout(**RADAR_LAYOUT)
-            st.plotly_chart(fig1, use_container_width=True)
-
-        with r_col2:
-            st.markdown('<div class="radar-label">Outils métier</div>', unsafe_allow_html=True)
-            stack = pd.DataFrame({
-                "tool": ["Snowflake", "Talend", "Power BI", "DataGalaxy", "Confluence"],
-                "score": [3, 3, 4, 2, 2]
-            })
-            fig2 = px.line_polar(stack, r="score", theta="tool", line_close=True)
-            fig2.update_traces(
-                fill='toself',
-                line_color="#7a9e7e",
-                fillcolor="rgba(122,158,126,0.25)"
-            )
-            fig2.update_layout(**RADAR_LAYOUT)
-            st.plotly_chart(fig2, use_container_width=True)
+          new Chart(document.getElementById('r2'), {
+            ...radarOpts,
+            data: {
+              labels: ['Snowflake','Talend','Power BI','DataGalaxy','Confluence'],
+              datasets: [{
+                data: [3, 3, 4, 2, 2],
+                backgroundColor: 'rgba(122,158,126,0.2)',
+                borderColor: '#7a9e7e',
+                borderWidth: 2,
+                pointBackgroundColor: '#7a9e7e',
+                pointRadius: 3
+              }]
+            }
+          });
+        </script>
+        """, height=280)
 
     # ── STATS ─────────────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
@@ -427,36 +402,27 @@ if page == "Accueil":
     components.html("""
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400&display=swap" rel="stylesheet">
     <style>
-      * { box-sizing: border-box; margin:0; padding:0; }
+      * { box-sizing:border-box; margin:0; padding:0; }
       body { background: transparent; }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-      }
+      .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
       .card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 28px 16px;
-        text-align: center;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-        border-top: 3px solid #d95f4b;
+        background:#fff; border-radius:12px;
+        padding:28px 16px; text-align:center;
+        box-shadow:0 2px 12px rgba(0,0,0,0.05);
+        border-top:3px solid #d95f4b;
       }
-      .card:nth-child(2) { border-color: #7a9e7e; }
-      .card:nth-child(3) { border-color: #c9a84c; }
-      .card:nth-child(4) { border-color: #9b8fcf; }
+      .card:nth-child(2){border-color:#7a9e7e;}
+      .card:nth-child(3){border-color:#c9a84c;}
+      .card:nth-child(4){border-color:#9b8fcf;}
       .num {
-        font-family: 'Playfair Display', serif;
-        font-size: 44px; font-weight: 700;
-        color: #1c1c1c; line-height: 1;
-        margin-bottom: 10px;
+        font-family:'Playfair Display',serif;
+        font-size:44px; font-weight:700;
+        color:#1c1c1c; line-height:1; margin-bottom:10px;
       }
       .lbl {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 11px; font-weight: 400;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: #7a7a7a;
+        font-family:'DM Sans',sans-serif;
+        font-size:11px; letter-spacing:0.12em;
+        text-transform:uppercase; color:#7a7a7a;
       }
     </style>
     <div class="grid">
@@ -472,7 +438,6 @@ if page == "Accueil":
 # ─────────────────────────────────────────────
 # PROJETS
 # ─────────────────────────────────────────────
-
 elif page == "Projets":
 
     st.markdown("""
@@ -522,7 +487,6 @@ elif page == "Projets":
 # ─────────────────────────────────────────────
 # VOYAGES
 # ─────────────────────────────────────────────
-
 elif page == "Voyages":
 
     st.markdown("""
@@ -535,10 +499,8 @@ elif page == "Voyages":
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("""
-    <p class="map-intro">
-        Grandir en changeant de pays, c'est apprendre à observer des systèmes très différents.
-        Voici la carte de mes escales — certaines pour l'enfance, d'autres pour la curiosité.
-    </p>
+    <p class="map-intro">Grandir en changeant de pays, c'est apprendre à observer des systèmes très différents.
+    Voici la carte de mes escales — certaines pour l'enfance, d'autres pour la curiosité.</p>
     """, unsafe_allow_html=True)
 
     travel = pd.DataFrame({
@@ -546,15 +508,9 @@ elif page == "Voyages":
         "lat":  [20.25, 41.90, 38.72, 40.41, 51.50, 14.69, 33.57, 35.90, 13.75],
         "lon":  [-10.32, 12.49, -9.13, -3.70, -0.12, -17.44, -7.59, 14.51, 100.50],
         "note": [
-            "Enfance · 3 ans sur place",
-            "Voyage · Rome & Florence",
-            "Voyage · Lisbonne",
-            "Voyage · Barcelone & Madrid",
-            "Voyage · Londres",
-            "Enfance · Dakar",
-            "Enfance · Casablanca & Rabat",
-            "Voyage · La Valette",
-            "Voyage · Bangkok & Chiang Mai"
+            "Enfance · 3 ans sur place","Voyage · Rome & Florence","Voyage · Lisbonne",
+            "Voyage · Barcelone & Madrid","Voyage · Londres","Enfance · Dakar",
+            "Enfance · Casablanca & Rabat","Voyage · La Valette","Voyage · Bangkok & Chiang Mai"
         ]
     })
 
@@ -572,8 +528,7 @@ elif page == "Voyages":
             showland=True, landcolor="#e8e4de",
             showocean=True, oceancolor="#dce8f0",
             showcoastlines=True, coastlinecolor="#c5bfb8",
-            showframe=False,
-            showcountries=True, countrycolor="#cec8c1",
+            showframe=False, showcountries=True, countrycolor="#cec8c1",
         ),
         margin=dict(t=10, b=10, l=0, r=0),
         height=520,
@@ -587,7 +542,6 @@ elif page == "Voyages":
 # ─────────────────────────────────────────────
 # EXPERIMENTATIONS
 # ─────────────────────────────────────────────
-
 elif page == "Expérimentations":
 
     st.markdown("""
@@ -601,13 +555,10 @@ elif page == "Expérimentations":
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("""
     <div class="bio-card" style="max-width:600px;">
-        <p>
-            Cette section est un <strong>laboratoire ouvert</strong> — des analyses rapides,
-            des visualisations expérimentales, des datasets trouvés par hasard et trop intéressants
-            pour ne pas être explorés.
-        </p>
+        <p>Cette section est un <strong>laboratoire ouvert</strong> — des analyses rapides,
+        des visualisations expérimentales, des datasets trouvés par hasard et trop intéressants
+        pour ne pas être explorés.</p>
         <p style="color:#7a7a7a;font-size:13px;margin-top:12px;">
-            Prochainement : analyse de mes habitudes de lecture · visualisation du coût de la vie entre mes villes · mini-projet NLP.
-        </p>
+        Prochainement : analyse de mes habitudes de lecture · visualisation du coût de la vie entre mes villes · mini-projet NLP.</p>
     </div>
     """, unsafe_allow_html=True)
