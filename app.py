@@ -10,10 +10,13 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────
-# SESSION STATE — page active
 # ─────────────────────────────────────────────
-if "page" not in st.session_state:
-    st.session_state.page = "Accueil"
+# NAVIGATION via query params
+# ─────────────────────────────────────────────
+nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
+page = st.query_params.get("page", "Accueil")
+if page not in nav_items:
+    page = "Accueil"
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
@@ -25,6 +28,9 @@ st.markdown("""
 header, footer, #MainMenu { visibility: hidden; }
 [data-testid="stSidebar"] { display: none; }
 section[data-testid="stSidebarNav"] { display: none; }
+
+/* remove default top padding so navbar is flush */
+.block-container { padding-top: 0 !important; }
 
 :root {
     --cream: #f4f1ed;
@@ -42,7 +48,6 @@ section[data-testid="stSidebarNav"] { display: none; }
     font-family: 'DM Sans', sans-serif;
 }
 
-/* ── Hero ── */
 .hero-wrap {
     text-align: center;
     padding: 60px 20px 20px;
@@ -69,7 +74,6 @@ section[data-testid="stSidebarNav"] { display: none; }
     margin: 18px auto 0;
 }
 
-/* ── Sections ── */
 .section-label {
     font-size: 11px; font-weight: 500;
     letter-spacing: 0.3em; text-transform: uppercase;
@@ -81,7 +85,6 @@ section[data-testid="stSidebarNav"] { display: none; }
     color: var(--ink); margin-bottom: 28px;
 }
 
-/* ── Bio card ── */
 .bio-card {
     background: var(--white);
     border-radius: 12px;
@@ -96,7 +99,6 @@ section[data-testid="stSidebarNav"] { display: none; }
     font-weight: 500; padding: 1px 8px; border-radius: 4px;
 }
 
-/* ── Projet card ── */
 .projet-card {
     background: var(--white); border-radius: 12px;
     padding: 28px 30px;
@@ -116,28 +118,6 @@ section[data-testid="stSidebarNav"] { display: none; }
     background: var(--cream); color: var(--muted); border: 1px solid #ddd;
 }
 
-/* ── Nav buttons reset ── */
-div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button {
-    background: #1c1c1c !important;
-    border: none !important;
-    border-radius: 0 !important;
-    color: rgba(255,255,255,0.55) !important;
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.2em !important;
-    text-transform: uppercase !important;
-    padding: 14px 8px !important;
-    width: 100% !important;
-    box-shadow: none !important;
-    transition: color 0.15s !important;
-}
-div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {
-    color: white !important;
-    background: #1c1c1c !important;
-}
-
-/* ── Map intro ── */
 .map-intro {
     font-size: 15px; color: var(--muted);
     max-width: 600px; margin-bottom: 24px; line-height: 1.7;
@@ -146,46 +126,67 @@ div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# TOP NAVIGATION BAR
+# NAVBAR — un seul bloc HTML propre, pleine largeur
 # ─────────────────────────────────────────────
-nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
+def nav_link(label, current):
+    cls = "active" if label == current else ""
+    return f'<a href="?page={label}" class="{cls}">{label}</a>'
 
-# Barre noire en HTML pur pour le fond + logo
-st.markdown("""
-<div style="
-    background:#1c1c1c;
-    padding:0 32px;
-    display:flex;
-    align-items:center;
-    margin: -1rem -1rem 0 -4rem;
-    height:52px;
-">
-    <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:white;letter-spacing:-0.01em;margin-right:auto;">
-        E. Marcouire
-    </span>
-</div>
+links_html = "".join(nav_link(item, page) for item in nav_items)
+
+# Barre pleine largeur : on sort du container Streamlit avec des marges négatives
+st.markdown(f"""
+<style>
+  /* supprime le padding top/bottom du main container */
+  .block-container {{
+    padding-top: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }}
+  .navbar {{
+    background: #1c1c1c;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 56px;
+    /* sort du container pour aller bord à bord */
+    margin-left: calc(-1rem - 4px);
+    margin-right: calc(-1rem - 4px);
+    margin-top: -4px;
+  }}
+  .navbar-logo {{
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; font-weight: 700;
+    color: white; letter-spacing: -0.01em;
+    flex-shrink: 0;
+  }}
+  .navbar-links {{
+    display: flex; gap: 36px;
+    align-items: center; height: 100%;
+  }}
+  .navbar-links a {{
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    text-decoration: none; padding: 20px 0 18px;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    transition: color 0.15s;
+  }}
+  .navbar-links a:hover {{ color: white; }}
+  .navbar-links a.active {{
+    color: white;
+    border-bottom: 2px solid #d95f4b;
+  }}
+</style>
+<nav class="navbar">
+  <span class="navbar-logo">E. Marcouire</span>
+  <div class="navbar-links">
+    {links_html}
+  </div>
+</nav>
 """, unsafe_allow_html=True)
-
-# Boutons de navigation Streamlit (fonctionnels) dans la même barre
-col_logo, col1, col2, col3, col4 = st.columns([4, 1, 1, 1, 1.5])
-
-with col_logo:
-    # espace vide pour pousser les boutons à droite
-    st.markdown(
-        '<div style="background:#1c1c1c;height:50px;margin-top:-52px;"></div>',
-        unsafe_allow_html=True
-    )
-
-for col, item in zip([col1, col2, col3, col4], nav_items):
-    with col:
-        active = st.session_state.page == item
-        # Surlignage si actif
-        border = "border-bottom: 2px solid #d95f4b; color: white !important;" if active else ""
-        if st.button(item, key=f"nav_{item}"):
-            st.session_state.page = item
-            st.rerun()
-
-page = st.session_state.page
 
 # ─────────────────────────────────────────────
 # ACCUEIL
