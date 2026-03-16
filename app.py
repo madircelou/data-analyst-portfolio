@@ -148,57 +148,44 @@ div[data-testid="stHorizontalBlock"] div[data-testid="stButton"] button:hover {
 # ─────────────────────────────────────────────
 # TOP NAVIGATION BAR
 # ─────────────────────────────────────────────
+
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
 
-# Barre noire
 st.markdown("""
 <style>
-
 .navbar {
     background:#1c1c1c;
     height:52px;
     display:flex;
     align-items:center;
-    padding:0 32px;
+    padding:0 40px;
     margin:-1rem -1rem 0 -1rem;
 }
 
-.nav-inner {
-    width:100%;
-    display:flex;
-    align-items:center;
-}
-
-.nav-logo {
+.nav-title {
     font-family:'Playfair Display', serif;
     font-size:17px;
     font-weight:700;
     color:white;
-    letter-spacing:-0.01em;
 }
-
 </style>
 
 <div class="navbar">
-    <div class="nav-inner">
-        <div class="nav-logo">E. Marcouire</div>
-    </div>
+<span class="nav-title">E. Marcouire</span>
 </div>
 """, unsafe_allow_html=True)
 
-# Navigation boutons
-col_logo, col1, col2, col3, col4 = st.columns([4,1,1,1,1])
+# boutons navigation
 
-with col_logo:
-    st.markdown(
-        '<div style="height:48px;background:#1c1c1c;margin-top:-52px;"></div>',
-        unsafe_allow_html=True
-    )
+cols = st.columns([5,1,1,1,1])
 
-for col, item in zip([col1, col2, col3, col4], nav_items):
+with cols[0]:
+    st.markdown('<div style="height:40px;background:#1c1c1c;margin-top:-48px;"></div>', unsafe_allow_html=True)
+
+for col, item in zip(cols[1:], nav_items):
     with col:
-        active = st.session_state.page == item
 
+        active = st.session_state.page == item
         label = f"**{item}**" if active else item
 
         if st.button(label, key=f"nav_{item}", use_container_width=True):
@@ -337,49 +324,79 @@ if page == "Accueil":
 
         # Deux radars Chart.js côte à côte dans un seul composant = zéro problème de layout
         components.html("""
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-        <style>
-          * { box-sizing: border-box; margin:0; padding:0; }
-          body { background: #f4f1ed; font-family: 'DM Sans', sans-serif; }
-          .wrap { display: flex; gap: 12px; padding: 4px 0 8px; }
-          .chart-box { flex: 1; text-align: center; }
-          .chart-label {
-            font-size: 10px; font-weight: 500;
-            letter-spacing: 0.18em; text-transform: uppercase;
-            color: #7a7a7a; margin-bottom: 6px;
-          }
-        </style>
-        <div class="wrap">
-          <div class="chart-box">
-            <div class="chart-label">Langages</div>
-            <canvas id="r1"></canvas>
-          </div>
-          <div class="chart-box">
-            <div class="chart-label">Outils métier</div>
-            <canvas id="r2"></canvas>
-          </div>
-        </div>
-        <script>
-          const radarOpts = {
-            type: 'radar',
-            options: {
-              responsive: true,
-              plugins: { legend: { display: false } },
-              scales: {
-                r: {
-                  min: 0, max: 4,
-                  ticks: { display: false, stepSize: 1 },
-                  grid: { color: '#e0dcd6' },
-                  angleLines: { color: '#e0dcd6' },
-                  pointLabels: {
-                    font: { family: 'DM Sans', size: 11 },
-                    color: '#1c1c1c'
-                  }
-                }
-              }
-            }
-          };
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+.wrap{
+display:flex;
+gap:20px;
+justify-content:center;
+align-items:center;
+}
+
+.chart{
+width:220px;
+height:220px;
+}
+</style>
+
+<div class="wrap">
+<canvas id="radar1" class="chart"></canvas>
+<canvas id="radar2" class="chart"></canvas>
+</div>
+
+<script>
+
+setTimeout(() => {
+
+const config = {
+type:'radar',
+options:{
+responsive:true,
+plugins:{legend:{display:false}},
+scales:{
+r:{
+min:0,
+max:4,
+ticks:{display:false},
+grid:{color:"#e0dcd6"},
+angleLines:{color:"#e0dcd6"},
+pointLabels:{color:"#1c1c1c"}
+}
+}
+}
+};
+
+new Chart(document.getElementById("radar1"),{
+...config,
+data:{
+labels:["Python","SQL","Excel","R"],
+datasets:[{
+data:[3,4,3,2],
+backgroundColor:"rgba(217,95,75,0.2)",
+borderColor:"#d95f4b",
+borderWidth:2
+}]
+}
+});
+
+new Chart(document.getElementById("radar2"),{
+...config,
+data:{
+labels:["Snowflake","Talend","Power BI","DataGalaxy","Confluence"],
+datasets:[{
+data:[3,3,4,2,2],
+backgroundColor:"rgba(122,158,126,0.2)",
+borderColor:"#7a9e7e",
+borderWidth:2
+}]
+}
+});
+
+},200)
+
+</script>
+""", height=260)
 
           new Chart(document.getElementById('r1'), {
             ...radarOpts,
