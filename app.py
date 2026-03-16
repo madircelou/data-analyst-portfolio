@@ -396,13 +396,7 @@ if page == "Accueil":
     <div class="tl">
       <div class="tl-item">
         <div class="tl-dot"></div>
-        <div class="tl-year">2002</div>
-        <div class="tl-role">Naissance</div>
-        <div class="tl-detail">Entre deux pays,<br>une enfance nomade</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-year">2002–18</div>
+        <div class="tl-year">2002–2009</div>
         <div class="tl-role">Maroc · Mauritanie · Sénégal</div>
         <div class="tl-detail">Grandir entre cultures,<br>lire les contextes</div>
       </div>
@@ -410,19 +404,13 @@ if page == "Accueil":
         <div class="tl-dot"></div>
         <div class="tl-year">2020</div>
         <div class="tl-role">Bac ES</div>
-        <div class="tl-detail">Spécialité Mathématiques<br>mention obtenue</div>
+        <div class="tl-detail">Spécialité Mathématiques<br>Mention Bien</div>
       </div>
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-year">2020</div>
         <div class="tl-role">Bordeaux</div>
         <div class="tl-detail">Licence MIASHS<br>Université de Bordeaux</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-year">2023</div>
-        <div class="tl-role">Premiers dashboards</div>
-        <div class="tl-detail">Power BI · SQL · Python<br>La donnée comme langage</div>
       </div>
       <div class="tl-item current">
         <div class="tl-dot"></div>
@@ -432,7 +420,7 @@ if page == "Accueil":
       </div>
       <div class="tl-item future">
         <div class="tl-dot"></div>
-        <div class="tl-year">2025+</div>
+        <div class="tl-year">2026+</div>
         <div class="tl-role">What's next?</div>
         <div class="tl-detail">La suite est<br>encore à écrire ✦</div>
       </div>
