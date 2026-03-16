@@ -170,11 +170,30 @@ Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des qu
         })
 
         fig1 = px.line_polar(
-            data_analysis,
-            r="score",
-            theta="tool",
-            line_close=True
+    data_analysis,
+    r="score",
+    theta="tool",
+    line_close=True
+)
+
+fig1.update_traces(
+    fill='toself',
+    line_color="#1f77b4",
+    fillcolor="rgba(31,119,180,0.35)"
+)
+
+fig1.update_layout(
+    showlegend=False,
+    paper_bgcolor="rgba(0,0,0,0)",
+    polar=dict(
+        bgcolor="rgba(0,0,0,0)",
+        radialaxis=dict(
+            visible=True,
+            range=[0,4],
+            gridcolor="#d6d6d6"
         )
+    )
+)
 
         fig1.update_traces(fill='toself')
 
@@ -194,11 +213,30 @@ Ce que j'aime le plus dans ce métier, c'est explorer des datasets, poser des qu
         })
 
         fig2 = px.line_polar(
-            stack,
-            r="score",
-            theta="tool",
-            line_close=True
+    data_analysis,
+    r="score",
+    theta="tool",
+    line_close=True
+)
+
+fig2.update_traces(
+    fill='toself',
+    line_color="#1f77b4",
+    fillcolor="rgba(31,119,180,0.35)"
+)
+
+fig2.update_layout(
+    showlegend=False,
+    paper_bgcolor="rgba(0,0,0,0)",
+    polar=dict(
+        bgcolor="rgba(0,0,0,0)",
+        radialaxis=dict(
+            visible=True,
+            range=[0,4],
+            gridcolor="#d6d6d6"
         )
+    )
+)
 
         fig2.update_traces(fill='toself')
 
