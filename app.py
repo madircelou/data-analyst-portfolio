@@ -370,7 +370,7 @@ if page == "Accueil":
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
             margin=dict(t=30, b=10, l=10, r=10),
-            height=270,
+            height=300,
             font=dict(color="#1c1c1c", family="DM Sans"),
             polar=dict(
                 bgcolor="rgba(0,0,0,0)",
