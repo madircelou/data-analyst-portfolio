@@ -62,6 +62,13 @@ margin-bottom:25px;
 font-size:18px;
 }
 
+.project-card {
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 4px 10px rgba(0,0,0,0.07);
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -69,7 +76,7 @@ font-size:18px;
 
 page = st.sidebar.radio(
     "Navigation",
-    ["Home","Projects","Travel Map","Data Experiments"]
+    ["Home","Projects","Travel Analytics","Data Experiments"]
 )
 
 # =====================================================
@@ -95,11 +102,14 @@ if page == "Home":
         st.markdown("""
 ### About me
 
-Data analyst en alternance issue d’une formation en **Mathématiques & Informatique appliquées aux Sciences Sociales**.
+Data analyst passionate about turning data into insights.
 
-Je travaille sur l’analyse et l’exploitation de données pour aider à la **prise de décision**, créer des **dashboards**, et transformer les données en **insights utiles**.
+Background in **Mathematics & Applied Data Analysis**.
 
-J’aime explorer les données, comprendre les phénomènes et créer des visualisations simples et efficaces.
+I work on:
+- data analysis
+- dashboards
+- business insights
 
 **Tools**
 
@@ -157,24 +167,22 @@ Excel
 <div class="timeline">
 
 <div class="timeline-item">
-<b>2020</b> – Baccalauréat Economique et Social  
-Spécialité Mathématiques (Mention Bien)
+<b>2020</b> – Baccalauréat ES (Mention Bien)
 </div>
 
 <div class="timeline-item">
 <b>2020 - 2024</b> – Université de Bordeaux  
-Licence Mathématiques & Informatique appliquées aux Sciences Sociales  
-Parcours Economie et Gestion
+Licence Mathématiques & Informatique appliquées
 </div>
 
 <div class="timeline-item">
-<b>2024 - Aujourd'hui</b> – Data Analyst (Alternance)
+<b>2024 - Today</b> – Data Analyst (Apprenticeship)
 </div>
 
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- DATA VIZ ---------------- #
+# ---------------- GRAPH ---------------- #
 
     st.markdown('<div class="section"></div>', unsafe_allow_html=True)
     st.subheader("About me in data")
@@ -207,25 +215,44 @@ Parcours Economie et Gestion
 
 elif page == "Projects":
 
-    st.title("Data Projects")
+    st.title("Projects")
 
-    st.write("Some of my data explorations and projects.")
+    col1,col2 = st.columns(2)
 
-    st.markdown("### Example project")
+    with col1:
+        st.markdown("""
+<div class="project-card">
 
-    st.write("""
-Airbnb price analysis in European cities.
+### Airbnb Price Analysis
 
-Goal:
-- understand pricing differences
-- explore geographic effects
-""")
+Goal  
+Understand price drivers in European cities.
+
+Tools  
+Python, Pandas, Visualization
+
+</div>
+""", unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+<div class="project-card">
+
+### Netflix Trends
+
+Analysis of movie duration and genre evolution.
+
+Tools  
+Python, Data Visualization
+
+</div>
+""", unsafe_allow_html=True)
 
 # =====================================================
 # TRAVEL MAP
 # =====================================================
 
-elif page == "Travel Map":
+elif page == "Travel Analytics":
 
     st.title("Travel Analytics")
 
@@ -245,4 +272,4 @@ elif page == "Data Experiments":
 
     st.title("Data Experiments")
 
-    st.write("Small analyses and experiments with datasets.")
+    st.write("Small data explorations and experiments.")
