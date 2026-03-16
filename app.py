@@ -1,33 +1,27 @@
 import streamlit as st
 import pandas as pd
 
-st.title("My Data Analyst Portfolio")
+st.set_page_config(page_title="Elodie Marcouire | Data Portfolio", layout="wide")
 
-st.header("About me")
+# Style
+st.markdown("""
+<style>
 
-st.write("""
-Welcome to my data portfolio.
-This dashboard showcases my analyses and experiments with data.
-""")
-
-st.header("Analyst metrics")
-
-data = {
-    "Metric": ["Datasets analysed", "SQL queries written", "Insights generated"],
-    "Value": [12, 4300, 38]
+.presentation {
+    background-color: #f5f7fb;
+    padding:40px;
+    border-radius:10px;
 }
 
-df = pd.DataFrame(data)
-
-st.table(df)
-
-st.header("Vacation analytics")
-
-travel_data = {
-    "Year": [2021,2022,2023,2024],
-    "Countries visited": [2,3,4,5]
+.timeline {
+    border-left: 3px solid #4A90E2;
+    padding-left:20px;
+    margin-top:20px;
 }
 
-travel_df = pd.DataFrame(travel_data)
+.timeline-item {
+    margin-bottom:20px;
+}
 
-st.line_chart(travel_df.set_index("Year"))
+</style>
+""", unsafe_allow_html=True)
