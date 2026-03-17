@@ -81,15 +81,25 @@ for _item in nav_items:
     )
 
 st.markdown(f"""
+<style>
+  .nav-scroll::-webkit-scrollbar {{ display:none; }}
+  @media(max-width:600px) {{
+    .nav-hint {{ display:block !important; }}
+  }}
+</style>
 <div style="background:#1c1c1c;display:flex;align-items:center;
 justify-content:space-between;padding:0 20px 0 24px;height:56px;
-margin-bottom:0;flex-wrap:nowrap;overflow:hidden;">
+margin-bottom:0;flex-wrap:nowrap;">
   <span style="font-family:Playfair Display,serif;font-size:16px;
   font-weight:700;color:white;letter-spacing:-0.01em;white-space:nowrap;
-  margin-right:16px;flex-shrink:0;">E. Marcouire</span>
-  <div style="display:flex;align-items:center;height:56px;
+  margin-right:12px;flex-shrink:0;">E. Marcouire</span>
+  <div class="nav-scroll" style="display:flex;align-items:center;height:56px;
   overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:1;
-  scrollbar-width:none;">{_links}</div>
+  scrollbar-width:none;position:relative;">{_links}
+    <span class="nav-hint" style="display:none;font-size:9px;
+    color:rgba(255,255,255,0.3);white-space:nowrap;padding-left:8px;
+    pointer-events:none;">← défiler →</span>
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -130,6 +140,11 @@ if page == "Accueil":
       .tl-role { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; color:#1c1c1c; text-align:center; margin-bottom:3px; }
       .tl-detail { font-family:'DM Sans',sans-serif; font-size:10px; color:#7a7a7a; text-align:center; line-height:1.5; }
     </style>
+    <style>
+      .hint { display:none; font-family:'DM Sans',sans-serif; font-size:9px; color:#bbb; text-align:right; padding:0 8px 2px; }
+      @media(max-width:560px){ .hint { display:block; } }
+    </style>
+    <p class="hint">← défiler →</p>
     <div class="tl-scroll"><div class="tl">
       <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2002–18</div><div class="tl-role">Maroc · Mauritanie · Sénégal</div><div class="tl-detail">Grandir entre cultures,<br>lire les contextes</div></div>
       <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2020</div><div class="tl-role">Bac ES</div><div class="tl-detail">Spé. Mathématiques<br>Mention Bien</div></div>
@@ -247,14 +262,15 @@ if page == "Accueil":
     <script>
     // Auto-resize iframe height to fit content
     function resizeParent() {
-      const h = document.body.scrollHeight;
-      window.parent.postMessage({type:'streamlit:setFrameHeight', height: h}, '*');
+      const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      window.parent.postMessage({type:'streamlit:setFrameHeight', height: h + 10}, '*');
     }
     window.addEventListener('load', resizeParent);
     window.addEventListener('resize', resizeParent);
-    setTimeout(resizeParent, 300);
+    setTimeout(resizeParent, 100);
+    setTimeout(resizeParent, 500);
     </script>
-    """, height=620)
+    """, height=430, scrolling=False)
 
     # ── DASHBOARD PERSO ───────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
@@ -333,9 +349,10 @@ if page == "Accueil":
     }
     window.addEventListener('load', resizeParent);
     window.addEventListener('resize', resizeParent);
-    setTimeout(resizeParent, 500);
+    setTimeout(resizeParent, 100);
+    setTimeout(resizeParent, 600);
     </script>
-    """, height=650)
+    """, height=460, scrolling=False)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
