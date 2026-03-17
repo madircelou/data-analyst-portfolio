@@ -204,22 +204,42 @@ section[data-testid="stSidebarNav"] { display: none; }
 # ── Navbar ──────────────────────────────────
 st.markdown("""
 <style>
-/* Reset block container top padding */
 .block-container { padding-top: 0 !important; }
 
-/* Style du radio transformé en navbar */
+/* Barre noire : logo div */
+#nav-logo {
+    background: #1c1c1c;
+    margin-left:  calc(-1rem - 4px);
+    margin-right: calc(-1rem - 4px);
+    padding: 0 0 0 40px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+}
+#nav-logo span {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; font-weight: 700;
+    color: white; letter-spacing: -0.01em;
+}
+
+/* Radio remonté sur la même ligne que le logo */
 div[data-testid="stRadio"] {
     background: #1c1c1c;
     margin-left:  calc(-1rem - 4px);
     margin-right: calc(-1rem - 4px);
-    padding: 0 40px;
+    margin-top: -56px;          /* remonte exactement sur la barre */
+    padding: 0 40px 0 200px;    /* laisse de la place au logo à gauche */
+    height: 56px;
+    display: flex;
+    align-items: center;
 }
+div[data-testid="stRadio"] > label { display: none !important; }
 div[data-testid="stRadio"] > div[role="radiogroup"] {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     height: 56px !important;
-    gap: 8px !important;
+    gap: 0 !important;
     flex-wrap: nowrap !important;
 }
 div[data-testid="stRadio"] label {
@@ -231,33 +251,23 @@ div[data-testid="stRadio"] label {
     color: rgba(255,255,255,0.45) !important;
     background: transparent !important;
     border: none !important;
-    padding: 18px 12px !important;
+    padding: 0 16px !important;
+    height: 56px !important;
     cursor: pointer !important;
     white-space: nowrap !important;
     display: flex !important;
     align-items: center !important;
-    gap: 0 !important;
+    border-bottom: 2px solid transparent !important;
 }
-/* Cache le rond */
 div[data-testid="stRadio"] label > div:first-child { display: none !important; }
-/* Option active */
 div[data-testid="stRadio"] label:has(input:checked) {
     color: white !important;
     border-bottom: 2px solid #d95f4b !important;
-    padding-bottom: 16px !important;
 }
 div[data-testid="stRadio"] label:hover { color: white !important; }
-/* Cache le label "nav" au-dessus */
-div[data-testid="stRadio"] > label { display: none !important; }
 </style>
-""", unsafe_allow_html=True)
 
-# Logo
-st.markdown("""
-<div style="background:#1c1c1c;margin-left:calc(-1rem - 4px);margin-right:calc(-1rem - 4px);
-padding:16px 40px 0;font-family:'Playfair Display',serif;font-size:17px;
-font-weight:700;color:white;letter-spacing:-0.01em;">
-E. Marcouire</div>
+<div id="nav-logo"><span>E. Marcouire</span></div>
 """, unsafe_allow_html=True)
 
 _sel = st.radio("nav", nav_items,
@@ -269,6 +279,7 @@ if _sel != st.session_state.page:
     st.rerun()
 
 page = st.session_state.page
+st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════
