@@ -69,13 +69,24 @@ footer { visibility: hidden; }
 # ═══════════════════════════════════════════════
 _links = ""
 for _item in nav_items:
-    _cls = "nav-link active" if _item == page else "nav-link"
-    _links += f'<a class="{_cls}" href="?page={_item}">{_item}</a>'
+    _active = _item == page
+    _color = "white" if _active else "rgba(255,255,255,0.5)"
+    _border = "border-bottom:2px solid #d95f4b;" if _active else "border-bottom:2px solid transparent;"
+    _links += (
+        f'<a href="?page={_item}" style="' 
+        f'font-family:DM Sans,sans-serif;font-size:11px;font-weight:500;' 
+        f'letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;' 
+        f'color:{_color};padding:0 18px;height:56px;display:flex;' 
+        f'align-items:center;{_border}">{_item}</a>'
+    )
 
 st.markdown(f"""
-<div class="nav-bar">
-  <span class="nav-logo">E. Marcouire</span>
-  <div class="nav-links">{_links}</div>
+<div style="background:#1c1c1c;display:flex;align-items:center;
+justify-content:space-between;padding:0 40px;height:56px;
+margin-bottom:0;">
+  <span style="font-family:Playfair Display,serif;font-size:17px;
+  font-weight:700;color:white;letter-spacing:-0.01em;">E. Marcouire</span>
+  <div style="display:flex;align-items:center;height:56px;">{_links}</div>
 </div>
 """, unsafe_allow_html=True)
 
