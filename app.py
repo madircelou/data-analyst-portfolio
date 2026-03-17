@@ -13,9 +13,8 @@ st.set_page_config(
 # NAVIGATION via query params (pas de sidebar)
 # ─────────────────────────────────────────────
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
-page = st.query_params.get("page", "Accueil")
-if page not in nav_items:
-    page = "Accueil"
+if "page" not in st.session_state:
+    st.session_state.page = "Accueil"
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
@@ -202,68 +201,58 @@ section[data-testid="stSidebarNav"] { display: none; }
 # ─────────────────────────────────────────────
 # NAVBAR
 # ─────────────────────────────────────────────
-# ── Navbar — 100% HTML, zéro CSS Streamlit ──
-_nav_links = "".join(
-    f'<a href="?page={item}" class="{"active" if item == page else ""}">{ item}</a>'
-    for item in nav_items
-)
-components.html(f"""
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@500&display=swap" rel="stylesheet">
-<style>
-  * {{ margin:0; padding:0; box-sizing:border-box; }}
-  html, body {{ background:#1c1c1c; height:56px; overflow:hidden; }}
-  nav {{
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    background: #1c1c1c;
-  }}
-  .logo {{
-    font-family: 'Playfair Display', serif;
-    font-size: 17px;
-    font-weight: 700;
-    color: white;
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-  }}
-  .links {{
-    display: flex;
-    align-items: center;
-    height: 56px;
-    gap: 0;
-  }}
-  .links a {{
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
-    text-decoration: none;
-    padding: 0 18px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    border-bottom: 2px solid transparent;
-    white-space: nowrap;
-    transition: color 0.15s;
-  }}
-  .links a:hover {{ color: white; }}
-  .links a.active {{
-    color: white;
-    border-bottom-color: #d95f4b;
-  }}
-</style>
-<nav>
-  <div class="logo">E. Marcouire</div>
-  <div class="links">{_nav_links}</div>
-</nav>
-""", height=56, scrolling=False)
+# ── Sidebar natif Streamlit ──
+with st.sidebar:
+    st.markdown("""
+    <style>
+    [data-testid="stSidebar"] {
+        background-color: #1c1c1c !important;
+    }
+    [data-testid="stSidebar"] * { color: white !important; }
+    [data-testid="stSidebarContent"] { padding-top: 32px; }
+    /* Radio items */
+    [data-testid="stSidebar"] .stRadio label {
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.15em !important;
+        text-transform: uppercase !important;
+        padding: 10px 0 !important;
+        color: rgba(255,255,255,0.55) !important;
+        border-radius: 0 !important;
+    }
+    [data-testid="stSidebar"] .stRadio label:has(input:checked) {
+        color: white !important;
+    }
+    [data-testid="stSidebar"] .stRadio label > div:first-child {
+        display: none !important;
+    }
+    /* Logo */
+    .sidebar-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
-# Retire le gap Streamlit au-dessus du contenu
-st.markdown("<style>.block-container{{padding-top:0!important}}</style>", unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-logo">E. Marcouire</div>', unsafe_allow_html=True)
+
+    _sel = st.radio(
+        "Navigation",
+        nav_items,
+        index=nav_items.index(st.session_state.page),
+        label_visibility="collapsed"
+    )
+    if _sel != st.session_state.page:
+        st.session_state.page = _sel
+        st.rerun()
+
+page = st.session_state.page
 
 
 # ═══════════════════════════════════════════════
