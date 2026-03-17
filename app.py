@@ -6,11 +6,11 @@ import plotly.express as px
 st.set_page_config(
     page_title="Elodie Marcouire | Portfolio",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # ─────────────────────────────────────────────
-# NAVIGATION via query params (pas de sidebar)
+# NAVIGATION
 # ─────────────────────────────────────────────
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
 if "page" not in st.session_state:
@@ -24,7 +24,6 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
 header, footer, #MainMenu { visibility: hidden; }
-[data-testid="stSidebar"] { display: none; }
 section[data-testid="stSidebarNav"] { display: none; }
 
 /* Retire le padding Streamlit pour que la navbar soit flush */
