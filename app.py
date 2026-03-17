@@ -82,11 +82,14 @@ for _item in nav_items:
 
 st.markdown(f"""
 <div style="background:#1c1c1c;display:flex;align-items:center;
-justify-content:space-between;padding:0 40px;height:56px;
-margin-bottom:0;">
-  <span style="font-family:Playfair Display,serif;font-size:17px;
-  font-weight:700;color:white;letter-spacing:-0.01em;">E. Marcouire</span>
-  <div style="display:flex;align-items:center;height:56px;">{_links}</div>
+justify-content:space-between;padding:0 20px 0 24px;height:56px;
+margin-bottom:0;flex-wrap:nowrap;overflow:hidden;">
+  <span style="font-family:Playfair Display,serif;font-size:16px;
+  font-weight:700;color:white;letter-spacing:-0.01em;white-space:nowrap;
+  margin-right:16px;flex-shrink:0;">E. Marcouire</span>
+  <div style="display:flex;align-items:center;height:56px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:1;
+  scrollbar-width:none;">{_links}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -214,7 +217,7 @@ if page == "Accueil":
       .panel-title { font-size:9px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#7a7a7a; margin-bottom:10px; }
       .ch { position:relative; width:100%; height:180px; }
       .db-foot { background:#fff; border:1px solid #e0dcd6; border-top:none; border-radius:0 0 12px 12px; padding:7px 14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; font-size:9px; color:#bbb; }
-      @media(max-width:520px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:19px;} }
+      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:18px;} .ch{height:220px;} }
     </style>
     <div class="db">
       <div class="db-head">
@@ -241,7 +244,17 @@ if page == "Accueil":
     const months=['Oct 24','Nov 24','Déc 24','Jan 25','Fév 25','Mar 25','Avr 25','Mai 25','Jun 25','Jul 25','Aoû 25','Mar 26'];
     new Chart(document.getElementById('progress'),{type:'line',data:{labels:months,datasets:[{label:'SQL/Snowflake',data:[4,5,5,6,6,7,7,7,8,8,8,8.5],borderColor:'#d95f4b',backgroundColor:'rgba(217,95,75,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true},{label:'Power BI',data:[5,6,6,7,7,7,8,8,8,8,8,8],borderColor:'#7a9e7e',backgroundColor:'rgba(122,158,126,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true},{label:'Python',data:[3,3,4,4,5,5,6,6,6,7,7,7],borderColor:'#c9a84c',backgroundColor:'rgba(201,168,76,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'DM Sans',size:9},color:'#555',boxWidth:10,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:8},color:'#aaa',maxRotation:45}},y:{min:0,max:10,grid:{color:'#f4f1ed'},ticks:{font:{size:8},color:'#aaa',stepSize:2}}}}});
     </script>
-    """, height=430)
+    <script>
+    // Auto-resize iframe height to fit content
+    function resizeParent() {
+      const h = document.body.scrollHeight;
+      window.parent.postMessage({type:'streamlit:setFrameHeight', height: h}, '*');
+    }
+    window.addEventListener('load', resizeParent);
+    window.addEventListener('resize', resizeParent);
+    setTimeout(resizeParent, 300);
+    </script>
+    """, height=620)
 
     # ── DASHBOARD PERSO ───────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
@@ -275,7 +288,7 @@ if page == "Accueil":
       .lang-bar-fill { height:100%; border-radius:4px; }
       .lang-pct { font-size:10px; color:#7a7a7a; width:36px; text-align:right; flex-shrink:0; }
       .db-foot { background:#fff; border:1px solid #e0dcd6; border-top:none; border-radius:0 0 12px 12px; padding:7px 14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; font-size:9px; color:#bbb; }
-      @media(max-width:520px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} }
+      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:18px;} .ch{height:220px;} }
     </style>
     <div class="db">
       <div class="db-head">
@@ -313,7 +326,16 @@ if page == "Accueil":
     <script>
     new Chart(document.getElementById('geo'),{type:'radar',data:{labels:["Afrique de l'ouest","Europe du sud","Europe du nord","Asie du sud-est","Maghreb"],datasets:[{data:[5,4,3,3,5],backgroundColor:'rgba(201,168,76,0.2)',borderColor:'#c9a84c',borderWidth:2,pointBackgroundColor:'#c9a84c',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:5,ticks:{display:false},grid:{color:'#e0dcd6'},angleLines:{color:'#e0dcd6'},pointLabels:{font:{family:'DM Sans',size:10},color:'#1c1c1c',padding:8}}}}});
     </script>
-    """, height=460)
+    <script>
+    function resizeParent() {
+      const h = document.body.scrollHeight;
+      window.parent.postMessage({type:'streamlit:setFrameHeight', height: h}, '*');
+    }
+    window.addEventListener('load', resizeParent);
+    window.addEventListener('resize', resizeParent);
+    setTimeout(resizeParent, 500);
+    </script>
+    """, height=650)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
