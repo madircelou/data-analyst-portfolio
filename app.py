@@ -13,8 +13,9 @@ st.set_page_config(
 # NAVIGATION via query params (pas de sidebar)
 # ─────────────────────────────────────────────
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
-if "page" not in st.session_state:
-    st.session_state.page = "Accueil"
+page = st.query_params.get("page", "Accueil")
+if page not in nav_items:
+    page = "Accueil"
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
@@ -201,85 +202,68 @@ section[data-testid="stSidebarNav"] { display: none; }
 # ─────────────────────────────────────────────
 # NAVBAR
 # ─────────────────────────────────────────────
-# ── Navbar ──────────────────────────────────
-st.markdown("""
+# ── Navbar — 100% HTML, zéro CSS Streamlit ──
+_nav_links = "".join(
+    f'<a href="?page={item}" class="{"active" if item == page else ""}">{ item}</a>'
+    for item in nav_items
+)
+components.html(f"""
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@500&display=swap" rel="stylesheet">
 <style>
-.block-container { padding-top: 0 !important; }
-
-/* Barre noire : logo div */
-#nav-logo {
-    background: #1c1c1c;
-    margin-left:  calc(-1rem - 4px);
-    margin-right: calc(-1rem - 4px);
-    padding: 0 0 0 40px;
+  * {{ margin:0; padding:0; box-sizing:border-box; }}
+  html, body {{ background:#1c1c1c; height:56px; overflow:hidden; }}
+  nav {{
     height: 56px;
     display: flex;
     align-items: center;
-}
-#nav-logo span {
+    justify-content: space-between;
+    padding: 0 40px;
+    background: #1c1c1c;
+  }}
+  .logo {{
     font-family: 'Playfair Display', serif;
-    font-size: 17px; font-weight: 700;
-    color: white; letter-spacing: -0.01em;
-}
-
-/* Radio remonté sur la même ligne que le logo */
-div[data-testid="stRadio"] {
-    background: #1c1c1c;
-    margin-left:  calc(-1rem - 4px);
-    margin-right: calc(-1rem - 4px);
-    margin-top: -56px;          /* remonte exactement sur la barre */
-    padding: 0 40px 0 200px;    /* laisse de la place au logo à gauche */
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }}
+  .links {{
+    display: flex;
+    align-items: center;
+    height: 56px;
+    gap: 0;
+  }}
+  .links a {{
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    padding: 0 18px;
     height: 56px;
     display: flex;
     align-items: center;
-}
-div[data-testid="stRadio"] > label { display: none !important; }
-div[data-testid="stRadio"] > div[role="radiogroup"] {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    height: 56px !important;
-    gap: 0 !important;
-    flex-wrap: nowrap !important;
-}
-div[data-testid="stRadio"] label {
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.2em !important;
-    text-transform: uppercase !important;
-    color: rgba(255,255,255,0.45) !important;
-    background: transparent !important;
-    border: none !important;
-    padding: 0 16px !important;
-    height: 56px !important;
-    cursor: pointer !important;
-    white-space: nowrap !important;
-    display: flex !important;
-    align-items: center !important;
-    border-bottom: 2px solid transparent !important;
-}
-div[data-testid="stRadio"] label > div:first-child { display: none !important; }
-div[data-testid="stRadio"] label:has(input:checked) {
-    color: white !important;
-    border-bottom: 2px solid #d95f4b !important;
-}
-div[data-testid="stRadio"] label:hover { color: white !important; }
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s;
+  }}
+  .links a:hover {{ color: white; }}
+  .links a.active {{
+    color: white;
+    border-bottom-color: #d95f4b;
+  }}
 </style>
+<nav>
+  <div class="logo">E. Marcouire</div>
+  <div class="links">{_nav_links}</div>
+</nav>
+""", height=56, scrolling=False)
 
-<div id="nav-logo"><span>E. Marcouire</span></div>
-""", unsafe_allow_html=True)
-
-_sel = st.radio("nav", nav_items,
-    index=nav_items.index(st.session_state.page),
-    horizontal=True, label_visibility="collapsed")
-
-if _sel != st.session_state.page:
-    st.session_state.page = _sel
-    st.rerun()
-
-page = st.session_state.page
-st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+# Retire le gap Streamlit au-dessus du contenu
+st.markdown("<style>.block-container{{padding-top:0!important}}</style>", unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════
