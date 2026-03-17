@@ -203,23 +203,27 @@ section[data-testid="stSidebarNav"] { display: none; }
 # ─────────────────────────────────────────────
 page = st.session_state.page
 
-# ── Navbar ──
-# CSS qui transforme les boutons en liens de navigation
+# ── Navbar ─────────────────────────────────
+# Marqueur unique pour cibler UNIQUEMENT cette ligne en CSS
+st.markdown('<div id="nav-sentinel"></div>', unsafe_allow_html=True)
+
 st.markdown("""
 <style>
-/* Barre noire pleine largeur */
-[data-testid="stHorizontalBlock"]:first-of-type {
-    background: #1c1c1c;
-    margin-left: calc(-1rem - 4px);
-    margin-right: calc(-1rem - 4px);
-    margin-top: -4px;
-    padding: 0 24px 0 32px;
-    height: 56px;
-    align-items: center;
-    gap: 0 !important;
+/* Cible uniquement le premier stHorizontalBlock APRÈS nav-sentinel */
+#nav-sentinel + div[data-testid="stHorizontalBlock"],
+#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child {
+    background: #1c1c1c !important;
+    margin-left: calc(-1rem - 4px) !important;
+    margin-right: calc(-1rem - 4px) !important;
+    margin-top: -4px !important;
+    padding: 0 16px 0 32px !important;
+    height: 56px !important;
+    align-items: center !important;
+    gap: 4px !important;
 }
-/* Tous les boutons dans la navbar */
-[data-testid="stHorizontalBlock"]:first-of-type button {
+/* Tous les boutons de cette navbar */
+#nav-sentinel + div[data-testid="stHorizontalBlock"] button,
+#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child button {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -230,17 +234,20 @@ st.markdown("""
     letter-spacing: 0.2em !important;
     text-transform: uppercase !important;
     color: rgba(255,255,255,0.45) !important;
-    padding: 0 12px !important;
+    padding: 0 10px !important;
     height: 56px !important;
     width: 100% !important;
     white-space: nowrap !important;
+    transition: color 0.15s !important;
 }
-[data-testid="stHorizontalBlock"]:first-of-type button:hover {
+#nav-sentinel + div[data-testid="stHorizontalBlock"] button:hover,
+#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child button:hover {
     color: white !important;
     background: transparent !important;
 }
-/* Colonne logo */
-[data-testid="stHorizontalBlock"]:first-of-type > div:first-child button {
+/* Logo col */
+#nav-sentinel + div[data-testid="stHorizontalBlock"] > div:first-child button,
+#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child > div:first-child button {
     font-family: 'Playfair Display', serif !important;
     font-size: 17px !important;
     font-weight: 700 !important;
@@ -248,39 +255,34 @@ st.markdown("""
     text-transform: none !important;
     color: white !important;
     padding-left: 0 !important;
-    cursor: default !important;
+    pointer-events: none !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 _logo_col, _c1, _c2, _c3, _c4 = st.columns([3, 1, 1, 1, 1.5])
-
 with _logo_col:
     st.button("E. Marcouire", key="nav_logo", disabled=True)
 
 for _col, _item in zip([_c1, _c2, _c3, _c4], nav_items):
     with _col:
-        # Soulignement corail si page active
-        if page == _item:
-            st.markdown(f"""
-            <style>
-            [data-testid="stHorizontalBlock"]:first-of-type div:has(button[kind="secondary"][data-testid*="{_item}"]) button,
-            </style>
-            """, unsafe_allow_html=True)
         if st.button(_item, key=f"nav_{_item}"):
             st.session_state.page = _item
             st.rerun()
 
-# Soulignement de l'onglet actif
-active_idx = nav_items.index(page) + 2  # +2 car logo est col 1
+# Onglet actif en blanc + soulignement corail
+_active_nth = nav_items.index(page) + 2
 st.markdown(f"""
 <style>
-[data-testid="stHorizontalBlock"]:first-of-type > div:nth-child({active_idx}) button {{
+#nav-sentinel + div[data-testid="stHorizontalBlock"] > div:nth-child({_active_nth}) button,
+#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child > div:nth-child({_active_nth}) button {{
     color: white !important;
     border-bottom: 2px solid #d95f4b !important;
 }}
 </style>
 """, unsafe_allow_html=True)
+
+page = st.session_state.page
 
 
 # ═══════════════════════════════════════════════
