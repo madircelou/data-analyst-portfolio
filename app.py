@@ -14,9 +14,9 @@ st.set_page_config(
 # NAVIGATION — session_state, 3 pages
 # ─────────────────────────────────────────────
 nav_items = ["Accueil", "Cas pratique", "Projets"]
-if "page" not in st.session_state:
-    st.session_state.page = "Accueil"
-page = st.session_state.page
+page = st.query_params.get("page", "Accueil")
+if page not in nav_items:
+    page = "Accueil"
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
@@ -140,7 +140,7 @@ footer { visibility:hidden; }
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# NAVBAR — inline styles, session_state
+# NAVBAR — pure HTML avec <a href> query params
 # ─────────────────────────────────────────────
 _links = ""
 for _item in nav_items:
@@ -148,52 +148,32 @@ for _item in nav_items:
     _color = "white" if _active else "rgba(255,255,255,0.5)"
     _border = "border-bottom:2px solid #d95f4b;" if _active else "border-bottom:2px solid transparent;"
     _links += (
-        f'<span onclick="window.location.href=\'?nav={_item}\'" style="'
+        f'<a href="?page={_item}" style="'
         f'font-family:DM Sans,sans-serif;font-size:11px;font-weight:500;'
-        f'letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;cursor:pointer;'
-        f'color:{_color};padding:0 18px;height:56px;display:flex;align-items:center;{_border}">{_item}</span>'
+        f'letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;'
+        f'color:{_color};padding:0 16px;height:56px;display:flex;'
+        f'align-items:center;{_border};white-space:nowrap;">{_item}</a>'
     )
 
 st.markdown(f"""
-<style>.nav-scroll::-webkit-scrollbar{{display:none;}}</style>
-<div style="background:#1c1c1c;display:flex;align-items:center;
-justify-content:space-between;padding:0 20px 0 24px;height:56px;flex-wrap:nowrap;">
-  <span style="font-family:Playfair Display,serif;font-size:16px;font-weight:700;
-  color:white;letter-spacing:-0.01em;white-space:nowrap;margin-right:12px;flex-shrink:0;">E. Marcouire</span>
-  <div class="nav-scroll" style="display:flex;align-items:center;height:56px;
-  overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:1;scrollbar-width:none;">{_links}</div>
-</div>
-""", unsafe_allow_html=True)
-
-# Boutons Streamlit invisibles pour la navigation (aucun style visible)
-st.markdown("""
 <style>
-.nav-buttons { display:flex; gap:0; margin-top:-56px; justify-content:flex-end;
-  padding-right:20px; height:56px; align-items:center; position:relative; z-index:10; }
-.nav-buttons > div > button {
-    opacity:0 !important; height:44px !important; min-width:80px !important;
-    cursor:pointer !important; border:none !important; background:transparent !important;
-    box-shadow:none !important;
-}
+  .nav-scroll::-webkit-scrollbar {{ display:none; }}
+  .nav-hint {{ display:none; }}
+  @media(max-width:600px) {{ .nav-hint {{ display:block; }} }}
 </style>
-<div class="nav-buttons">
-""", unsafe_allow_html=True)
-
-_cols = st.columns([4] + [1]*len(nav_items))
-for _col, _item in zip(_cols[1:], nav_items):
-    with _col:
-        if st.button(_item, key=f"nav_{_item}"):
-            st.session_state.page = _item
-            st.rerun()
-
-st.markdown("</div>", unsafe_allow_html=True)
-page = st.session_state.page
-
-# Hint mobile sous la barre
-st.markdown("""
-<style>.nav-hint{display:none;}@media(max-width:600px){.nav-hint{display:block;}}</style>
-<div class="nav-hint" style="background:#1c1c1c;padding:2px 24px 5px;
-font-size:9px;color:rgba(255,255,255,0.3);text-align:right;">← défiler →</div>
+<div style="background:#1c1c1c;display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px 0 24px;height:56px;flex-wrap:nowrap;">
+  <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+    color:white;letter-spacing:-0.01em;white-space:nowrap;margin-right:12px;flex-shrink:0;">
+    E. Marcouire
+  </span>
+  <div class="nav-scroll" style="display:flex;align-items:center;height:56px;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:1;scrollbar-width:none;">
+    {_links}
+  </div>
+</div>
+<div class="nav-hint" style="background:#1c1c1c;padding:2px 20px 5px;
+  font-size:9px;color:rgba(255,255,255,0.3);text-align:right;">← défiler →</div>
 """, unsafe_allow_html=True)
 
 
@@ -352,7 +332,7 @@ if page == "Accueil":
     const months=['Oct 24','Nov 24','Déc 24','Jan 25','Fév 25','Mar 25','Avr 25','Mai 25','Jun 25','Jul 25','Aoû 25','Mar 26'];
     new Chart(document.getElementById('progress'),{type:'line',data:{labels:months,datasets:[{label:'SQL/Snowflake',data:[4,5,5,6,6,7,7,7,8,8,8,8.5],borderColor:'#d95f4b',backgroundColor:'rgba(217,95,75,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true},{label:'Power BI',data:[5,6,6,7,7,7,8,8,8,8,8,8],borderColor:'#7a9e7e',backgroundColor:'rgba(122,158,126,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true},{label:'Python',data:[3,3,4,4,5,5,6,6,6,7,7,7],borderColor:'#c9a84c',backgroundColor:'rgba(201,168,76,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'DM Sans',size:9},color:'#555',boxWidth:10,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:8},color:'#aaa',maxRotation:45}},y:{min:0,max:10,grid:{color:'#f4f1ed'},ticks:{font:{size:8},color:'#aaa',stepSize:2}}}}});
     </script>
-    """, height=620, scrolling=True)
+    """, height=680, scrolling=False)
 
     # ── DASHBOARD PERSO ───────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
@@ -424,7 +404,7 @@ if page == "Accueil":
     <script>
     new Chart(document.getElementById('geo'),{type:'radar',data:{labels:["Afrique de l'ouest","Europe du sud","Europe du nord","Asie du sud-est","Maghreb"],datasets:[{data:[5,4,3,3,5],backgroundColor:'rgba(201,168,76,0.2)',borderColor:'#c9a84c',borderWidth:2,pointBackgroundColor:'#c9a84c',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:5,ticks:{display:false},grid:{color:'#e0dcd6'},angleLines:{color:'#e0dcd6'},pointLabels:{font:{family:'DM Sans',size:10},color:'#1c1c1c',padding:8}}}}});
     </script>
-    """, height=670, scrolling=True)
+    """, height=700, scrolling=False)
 
     # ── EN 30 SECONDES ────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
