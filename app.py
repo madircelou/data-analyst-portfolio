@@ -13,9 +13,8 @@ st.set_page_config(
 # NAVIGATION via query params (pas de sidebar)
 # ─────────────────────────────────────────────
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
-page = st.query_params.get("page", "Accueil")
-if page not in nav_items:
-    page = "Accueil"
+if "page" not in st.session_state:
+    st.session_state.page = "Accueil"
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
@@ -202,18 +201,63 @@ section[data-testid="stSidebarNav"] { display: none; }
 # ─────────────────────────────────────────────
 # NAVBAR
 # ─────────────────────────────────────────────
-def nav_link(label, current):
-    cls = "active" if label == current else ""
-    return f'<a href="?page={label}" class="{cls}">{label}</a>'
+# Navbar HTML statique (style) + boutons Streamlit invisibles par-dessus
+page = st.session_state.page
 
-links_html = "".join(nav_link(item, page) for item in nav_items)
-
+# Barre visuelle
+active_items = "".join(
+    f'<span style="font-family:DM Sans,sans-serif;font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:{"white" if item == page else "rgba(255,255,255,0.45)"};{"border-bottom:2px solid #d95f4b;padding-bottom:3px;" if item == page else ""}padding:0 2px;">{item}</span>'
+    for item in nav_items
+)
 st.markdown(f"""
 <nav class="navbar">
   <span class="navbar-logo">E. Marcouire</span>
-  <div class="navbar-links">{links_html}</div>
+  <div class="navbar-links" style="pointer-events:none;">{active_items}</div>
 </nav>
 """, unsafe_allow_html=True)
+
+# Boutons fonctionnels superposés (invisibles visuellement)
+st.markdown("""
+<style>
+.nav-btn-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -48px;
+    margin-left: calc(-1rem - 4px);
+    margin-right: calc(-1rem - 4px);
+    padding-right: 40px;
+    height: 48px;
+    position: relative;
+    z-index: 100;
+}
+.nav-btn-row > div { display: flex; gap: 32px; align-items: center; }
+/* Rend les boutons complètement transparents */
+.nav-btn-row button {
+    background: transparent !important;
+    border: none !important;
+    color: transparent !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    padding: 0 8px !important;
+    height: 48px !important;
+    font-size: 11px !important;
+    min-width: 80px !important;
+}
+.nav-btn-row button:hover { background: transparent !important; }
+.nav-btn-row button:focus { outline: none !important; box-shadow: none !important; }
+</style>
+<div class="nav-btn-row">
+""", unsafe_allow_html=True)
+
+_c1, _c2, _c3, _c4, _c5 = st.columns([4, 1, 1, 1, 1.5])
+for _col, _item in zip([_c2, _c3, _c4, _c5], nav_items):
+    with _col:
+        if st.button(_item, key=f"nav_{_item}"):
+            st.session_state.page = _item
+            st.rerun()
+
+st.markdown("</div>", unsafe_allow_html=True)
+page = st.session_state.page
 
 
 # ═══════════════════════════════════════════════
