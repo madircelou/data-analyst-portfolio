@@ -13,9 +13,8 @@ st.set_page_config(
 # NAVIGATION via query params (pas de sidebar)
 # ─────────────────────────────────────────────
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
-page = st.query_params.get("page", "Accueil")
-if page not in nav_items:
-    page = "Accueil"
+if "page" not in st.session_state:
+    st.session_state.page = "Accueil"
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
@@ -202,44 +201,74 @@ section[data-testid="stSidebarNav"] { display: none; }
 # ─────────────────────────────────────────────
 # NAVBAR
 # ─────────────────────────────────────────────
-# ── Navbar dans components.html — seule approche fiable ──
-components.html(f"""
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+# ── Navbar ──────────────────────────────────
+st.markdown("""
 <style>
-  * {{ box-sizing:border-box; margin:0; padding:0; }}
-  html, body {{ background:#1c1c1c; overflow:hidden; }}
-  nav {{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:0 40px; height:56px; background:#1c1c1c;
-  }}
-  .logo {{
-    font-family:'Playfair Display',serif;
-    font-size:17px; font-weight:700; color:white;
-    letter-spacing:-0.01em; text-decoration:none; cursor:default;
-  }}
-  .links {{ display:flex; gap:4px; align-items:center; height:56px; }}
-  .links a {{
-    font-family:'DM Sans',sans-serif;
-    font-size:11px; font-weight:500;
-    letter-spacing:0.2em; text-transform:uppercase;
-    text-decoration:none;
-    color:rgba(255,255,255,0.45);
-    padding:0 14px; height:56px;
-    display:flex; align-items:center;
-    border-bottom:2px solid transparent;
-    transition:color 0.15s;
-    white-space:nowrap;
-  }}
-  .links a:hover {{ color:white; }}
-  .links a.active {{ color:white; border-bottom-color:#d95f4b; }}
+/* Reset block container top padding */
+.block-container { padding-top: 0 !important; }
+
+/* Style du radio transformé en navbar */
+div[data-testid="stRadio"] {
+    background: #1c1c1c;
+    margin-left:  calc(-1rem - 4px);
+    margin-right: calc(-1rem - 4px);
+    padding: 0 40px;
+}
+div[data-testid="stRadio"] > div[role="radiogroup"] {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    height: 56px !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+}
+div[data-testid="stRadio"] label {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2em !important;
+    text-transform: uppercase !important;
+    color: rgba(255,255,255,0.45) !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 18px 12px !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0 !important;
+}
+/* Cache le rond */
+div[data-testid="stRadio"] label > div:first-child { display: none !important; }
+/* Option active */
+div[data-testid="stRadio"] label:has(input:checked) {
+    color: white !important;
+    border-bottom: 2px solid #d95f4b !important;
+    padding-bottom: 16px !important;
+}
+div[data-testid="stRadio"] label:hover { color: white !important; }
+/* Cache le label "nav" au-dessus */
+div[data-testid="stRadio"] > label { display: none !important; }
 </style>
-<nav>
-  <span class="logo">E. Marcouire</span>
-  <div class="links">
-    {"".join(f'<a href="?page={item}" class="{"active" if item == page else ""}">{item}</a>' for item in nav_items)}
-  </div>
-</nav>
-""", height=56, scrolling=False)
+""", unsafe_allow_html=True)
+
+# Logo
+st.markdown("""
+<div style="background:#1c1c1c;margin-left:calc(-1rem - 4px);margin-right:calc(-1rem - 4px);
+padding:16px 40px 0;font-family:'Playfair Display',serif;font-size:17px;
+font-weight:700;color:white;letter-spacing:-0.01em;">
+E. Marcouire</div>
+""", unsafe_allow_html=True)
+
+_sel = st.radio("nav", nav_items,
+    index=nav_items.index(st.session_state.page),
+    horizontal=True, label_visibility="collapsed")
+
+if _sel != st.session_state.page:
+    st.session_state.page = _sel
+    st.rerun()
+
+page = st.session_state.page
 
 
 # ═══════════════════════════════════════════════
