@@ -13,8 +13,9 @@ st.set_page_config(
 # NAVIGATION via query params (pas de sidebar)
 # ─────────────────────────────────────────────
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
-if "page" not in st.session_state:
-    st.session_state.page = "Accueil"
+page = st.query_params.get("page", "Accueil")
+if page not in nav_items:
+    page = "Accueil"
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL
@@ -201,88 +202,44 @@ section[data-testid="stSidebarNav"] { display: none; }
 # ─────────────────────────────────────────────
 # NAVBAR
 # ─────────────────────────────────────────────
-page = st.session_state.page
-
-# ── Navbar ─────────────────────────────────
-# Marqueur unique pour cibler UNIQUEMENT cette ligne en CSS
-st.markdown('<div id="nav-sentinel"></div>', unsafe_allow_html=True)
-
-st.markdown("""
+# ── Navbar dans components.html — seule approche fiable ──
+components.html(f"""
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* Cible uniquement le premier stHorizontalBlock APRÈS nav-sentinel */
-#nav-sentinel + div[data-testid="stHorizontalBlock"],
-#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child {
-    background: #1c1c1c !important;
-    margin-left: calc(-1rem - 4px) !important;
-    margin-right: calc(-1rem - 4px) !important;
-    margin-top: -4px !important;
-    padding: 0 16px 0 32px !important;
-    height: 56px !important;
-    align-items: center !important;
-    gap: 4px !important;
-}
-/* Tous les boutons de cette navbar */
-#nav-sentinel + div[data-testid="stHorizontalBlock"] button,
-#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child button {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.2em !important;
-    text-transform: uppercase !important;
-    color: rgba(255,255,255,0.45) !important;
-    padding: 0 10px !important;
-    height: 56px !important;
-    width: 100% !important;
-    white-space: nowrap !important;
-    transition: color 0.15s !important;
-}
-#nav-sentinel + div[data-testid="stHorizontalBlock"] button:hover,
-#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child button:hover {
-    color: white !important;
-    background: transparent !important;
-}
-/* Logo col */
-#nav-sentinel + div[data-testid="stHorizontalBlock"] > div:first-child button,
-#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child > div:first-child button {
-    font-family: 'Playfair Display', serif !important;
-    font-size: 17px !important;
-    font-weight: 700 !important;
-    letter-spacing: -0.01em !important;
-    text-transform: none !important;
-    color: white !important;
-    padding-left: 0 !important;
-    pointer-events: none !important;
-}
+  * {{ box-sizing:border-box; margin:0; padding:0; }}
+  html, body {{ background:#1c1c1c; overflow:hidden; }}
+  nav {{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 40px; height:56px; background:#1c1c1c;
+  }}
+  .logo {{
+    font-family:'Playfair Display',serif;
+    font-size:17px; font-weight:700; color:white;
+    letter-spacing:-0.01em; text-decoration:none; cursor:default;
+  }}
+  .links {{ display:flex; gap:4px; align-items:center; height:56px; }}
+  .links a {{
+    font-family:'DM Sans',sans-serif;
+    font-size:11px; font-weight:500;
+    letter-spacing:0.2em; text-transform:uppercase;
+    text-decoration:none;
+    color:rgba(255,255,255,0.45);
+    padding:0 14px; height:56px;
+    display:flex; align-items:center;
+    border-bottom:2px solid transparent;
+    transition:color 0.15s;
+    white-space:nowrap;
+  }}
+  .links a:hover {{ color:white; }}
+  .links a.active {{ color:white; border-bottom-color:#d95f4b; }}
 </style>
-""", unsafe_allow_html=True)
-
-_logo_col, _c1, _c2, _c3, _c4 = st.columns([3, 1, 1, 1, 1.5])
-with _logo_col:
-    st.button("E. Marcouire", key="nav_logo", disabled=True)
-
-for _col, _item in zip([_c1, _c2, _c3, _c4], nav_items):
-    with _col:
-        if st.button(_item, key=f"nav_{_item}"):
-            st.session_state.page = _item
-            st.rerun()
-
-# Onglet actif en blanc + soulignement corail
-_active_nth = nav_items.index(page) + 2
-st.markdown(f"""
-<style>
-#nav-sentinel + div[data-testid="stHorizontalBlock"] > div:nth-child({_active_nth}) button,
-#nav-sentinel ~ div > div[data-testid="stHorizontalBlock"]:first-child > div:nth-child({_active_nth}) button {{
-    color: white !important;
-    border-bottom: 2px solid #d95f4b !important;
-}}
-</style>
-""", unsafe_allow_html=True)
-
-page = st.session_state.page
+<nav>
+  <span class="logo">E. Marcouire</span>
+  <div class="links">
+    {"".join(f'<a href="?page={item}" class="{"active" if item == page else ""}">{item}</a>' for item in nav_items)}
+  </div>
+</nav>
+""", height=56, scrolling=False)
 
 
 # ═══════════════════════════════════════════════
