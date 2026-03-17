@@ -198,7 +198,7 @@ if page == "Accueil":
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
       * { box-sizing:border-box; margin:0; padding:0; }
-      html,body { background:#f4f1ed; overflow-x:hidden; }
+      html,body { background:#f4f1ed; overflow-x:hidden; overflow-y:visible; }
       .hint { display:none; font-family:'DM Sans',sans-serif; font-size:9px; color:#bbb; text-align:right; padding:0 4px 4px; }
       @media(max-width:560px){ .hint{display:block;} }
       .tl-scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
@@ -226,7 +226,7 @@ if page == "Accueil":
       <div class="tl-item current"><div class="tl-dot"></div><div class="tl-year">2024 →</div><div class="tl-role">Alternante Data Analyst</div><div class="tl-detail">Domofrance<br>Snowflake · Talend · Power BI</div></div>
       <div class="tl-item future"><div class="tl-dot"></div><div class="tl-year">2026+</div><div class="tl-role">What's next?</div><div class="tl-detail">La suite est<br>encore à écrire ✦</div></div>
     </div></div>
-    """, height=168)
+    """, height=195)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -332,7 +332,7 @@ if page == "Accueil":
     const months=['Oct 24','Nov 24','Déc 24','Jan 25','Fév 25','Mar 25','Avr 25','Mai 25','Jun 25','Jul 25','Aoû 25','Mar 26'];
     new Chart(document.getElementById('progress'),{type:'line',data:{labels:months,datasets:[{label:'SQL/Snowflake',data:[4,5,5,6,6,7,7,7,8,8,8,8.5],borderColor:'#d95f4b',backgroundColor:'rgba(217,95,75,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true},{label:'Power BI',data:[5,6,6,7,7,7,8,8,8,8,8,8],borderColor:'#7a9e7e',backgroundColor:'rgba(122,158,126,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true},{label:'Python',data:[3,3,4,4,5,5,6,6,6,7,7,7],borderColor:'#c9a84c',backgroundColor:'rgba(201,168,76,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'DM Sans',size:9},color:'#555',boxWidth:10,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:8},color:'#aaa',maxRotation:45}},y:{min:0,max:10,grid:{color:'#f4f1ed'},ticks:{font:{size:8},color:'#aaa',stepSize:2}}}}});
     </script>
-    """, height=680, scrolling=False)
+    """, height=680, scrolling=True)
 
     # ── DASHBOARD PERSO ───────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
@@ -404,7 +404,7 @@ if page == "Accueil":
     <script>
     new Chart(document.getElementById('geo'),{type:'radar',data:{labels:["Afrique de l'ouest","Europe du sud","Europe du nord","Asie du sud-est","Maghreb"],datasets:[{data:[5,4,3,3,5],backgroundColor:'rgba(201,168,76,0.2)',borderColor:'#c9a84c',borderWidth:2,pointBackgroundColor:'#c9a84c',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:5,ticks:{display:false},grid:{color:'#e0dcd6'},angleLines:{color:'#e0dcd6'},pointLabels:{font:{family:'DM Sans',size:10},color:'#1c1c1c',padding:8}}}}});
     </script>
-    """, height=700, scrolling=False)
+    """, height=700, scrolling=True)
 
     # ── EN 30 SECONDES ────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
