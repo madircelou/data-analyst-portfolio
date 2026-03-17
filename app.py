@@ -81,12 +81,7 @@ for _item in nav_items:
     )
 
 st.markdown(f"""
-<style>
-  .nav-scroll::-webkit-scrollbar {{ display:none; }}
-  @media(max-width:600px) {{
-    .nav-hint {{ display:block !important; }}
-  }}
-</style>
+<style>.nav-scroll::-webkit-scrollbar{{display:none;}}</style>
 <div style="background:#1c1c1c;display:flex;align-items:center;
 justify-content:space-between;padding:0 20px 0 24px;height:56px;
 margin-bottom:0;flex-wrap:nowrap;">
@@ -95,12 +90,18 @@ margin-bottom:0;flex-wrap:nowrap;">
   margin-right:12px;flex-shrink:0;">E. Marcouire</span>
   <div class="nav-scroll" style="display:flex;align-items:center;height:56px;
   overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:1;
-  scrollbar-width:none;position:relative;">{_links}
-    <span class="nav-hint" style="display:none;font-size:9px;
-    color:rgba(255,255,255,0.3);white-space:nowrap;padding-left:8px;
-    pointer-events:none;">← défiler →</span>
-  </div>
+  scrollbar-width:none;">{_links}</div>
 </div>
+""", unsafe_allow_html=True)
+
+# Hint nav affiché sous la barre uniquement sur mobile
+st.markdown("""
+<style>
+  .nav-mobile-hint { display:none; }
+  @media(max-width:600px){ .nav-mobile-hint { display:block; } }
+</style>
+<div class="nav-mobile-hint" style="background:#1c1c1c;padding:2px 24px 6px;
+font-size:9px;color:rgba(255,255,255,0.3);text-align:right;">← défiler →</div>
 """, unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════
@@ -232,7 +233,7 @@ if page == "Accueil":
       .panel-title { font-size:9px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#7a7a7a; margin-bottom:10px; }
       .ch { position:relative; width:100%; height:180px; }
       .db-foot { background:#fff; border:1px solid #e0dcd6; border-top:none; border-radius:0 0 12px 12px; padding:7px 14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; font-size:9px; color:#bbb; }
-      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:18px;} .ch{height:220px;} }
+      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:18px;} .ch{height:160px;} }
     </style>
     <div class="db">
       <div class="db-head">
@@ -260,17 +261,8 @@ if page == "Accueil":
     new Chart(document.getElementById('progress'),{type:'line',data:{labels:months,datasets:[{label:'SQL/Snowflake',data:[4,5,5,6,6,7,7,7,8,8,8,8.5],borderColor:'#d95f4b',backgroundColor:'rgba(217,95,75,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true},{label:'Power BI',data:[5,6,6,7,7,7,8,8,8,8,8,8],borderColor:'#7a9e7e',backgroundColor:'rgba(122,158,126,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true},{label:'Python',data:[3,3,4,4,5,5,6,6,6,7,7,7],borderColor:'#c9a84c',backgroundColor:'rgba(201,168,76,0.07)',borderWidth:2,pointRadius:3,tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'DM Sans',size:9},color:'#555',boxWidth:10,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:8},color:'#aaa',maxRotation:45}},y:{min:0,max:10,grid:{color:'#f4f1ed'},ticks:{font:{size:8},color:'#aaa',stepSize:2}}}}});
     </script>
     <script>
-    // Auto-resize iframe height to fit content
-    function resizeParent() {
-      const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-      window.parent.postMessage({type:'streamlit:setFrameHeight', height: h + 10}, '*');
-    }
-    window.addEventListener('load', resizeParent);
-    window.addEventListener('resize', resizeParent);
-    setTimeout(resizeParent, 100);
-    setTimeout(resizeParent, 500);
     </script>
-    """, height=430, scrolling=False)
+    """, height=650, scrolling=False)
 
     # ── DASHBOARD PERSO ───────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
@@ -304,7 +296,7 @@ if page == "Accueil":
       .lang-bar-fill { height:100%; border-radius:4px; }
       .lang-pct { font-size:10px; color:#7a7a7a; width:36px; text-align:right; flex-shrink:0; }
       .db-foot { background:#fff; border:1px solid #e0dcd6; border-top:none; border-radius:0 0 12px 12px; padding:7px 14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; font-size:9px; color:#bbb; }
-      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:18px;} .ch{height:220px;} }
+      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:18px;} .ch{height:160px;} }
     </style>
     <div class="db">
       <div class="db-head">
@@ -352,7 +344,7 @@ if page == "Accueil":
     setTimeout(resizeParent, 100);
     setTimeout(resizeParent, 600);
     </script>
-    """, height=460, scrolling=False)
+    """, height=680, scrolling=False)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
