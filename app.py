@@ -228,12 +228,12 @@ if page == "Accueil":
       .kpi-sub { font-size:10px; color:#7a7a7a; }
       .kpi-sub.up { color:#7a9e7e; font-weight:500; }
       .kpi-sub.warn { color:#d95f4b; font-weight:500; }
-      .charts { display:grid; grid-template-columns:4fr 6fr; gap:1px; background:#e0dcd6; border:1px solid #e0dcd6; border-top:none; }
+      .charts { display:grid; grid-template-columns:1fr; gap:1px; background:#e0dcd6; border:1px solid #e0dcd6; border-top:none; }
       .panel { background:#fff; padding:14px 14px 10px; }
       .panel-title { font-size:9px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#7a7a7a; margin-bottom:10px; }
       .ch { position:relative; width:100%; height:180px; }
       .db-foot { background:#fff; border:1px solid #e0dcd6; border-top:none; border-radius:0 0 12px 12px; padding:7px 14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; font-size:9px; color:#bbb; }
-      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:18px;} .ch{height:160px;} }
+      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .kpi-val{font-size:18px;} }
     </style>
     <div class="db">
       <div class="db-head">
@@ -262,7 +262,7 @@ if page == "Accueil":
     </script>
     <script>
     </script>
-    """, height=650, scrolling=False)
+    """, height=580, scrolling=False)
 
     # ── DASHBOARD PERSO ───────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
@@ -286,7 +286,7 @@ if page == "Accueil":
       .kpi-sub { font-size:10px; color:#7a7a7a; }
       .kpi-sub.fun { color:#c9a84c; font-weight:500; font-style:italic; }
       .kpi-sub.up  { color:#7a9e7e; font-weight:500; }
-      .charts { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#e0dcd6; border:1px solid #e0dcd6; border-top:none; }
+      .charts { display:grid; grid-template-columns:1fr; gap:1px; background:#e0dcd6; border:1px solid #e0dcd6; border-top:none; }
       .panel { background:#fff; padding:14px 14px 10px; }
       .panel-title { font-size:9px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#7a7a7a; margin-bottom:10px; }
       .ch { position:relative; width:100%; height:200px; }
@@ -296,7 +296,7 @@ if page == "Accueil":
       .lang-bar-fill { height:100%; border-radius:4px; }
       .lang-pct { font-size:10px; color:#7a7a7a; width:36px; text-align:right; flex-shrink:0; }
       .db-foot { background:#fff; border:1px solid #e0dcd6; border-top:none; border-radius:0 0 12px 12px; padding:7px 14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; font-size:9px; color:#bbb; }
-      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} .kpi-val{font-size:18px;} .ch{height:160px;} }
+      @media(max-width:600px){ .kpi-row{grid-template-columns:repeat(2,1fr);} .kpi-val{font-size:18px;} }
     </style>
     <div class="db">
       <div class="db-head">
@@ -344,7 +344,7 @@ if page == "Accueil":
     setTimeout(resizeParent, 100);
     setTimeout(resizeParent, 600);
     </script>
-    """, height=680, scrolling=False)
+    """, height=610, scrolling=False)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
