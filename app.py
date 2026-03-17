@@ -201,63 +201,104 @@ section[data-testid="stSidebarNav"] { display: none; }
 # ─────────────────────────────────────────────
 # NAVBAR
 # ─────────────────────────────────────────────
-# Navbar HTML statique (style) + boutons Streamlit invisibles par-dessus
 page = st.session_state.page
 
-# Barre visuelle
-active_items = "".join(
-    f'<span style="font-family:DM Sans,sans-serif;font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:{"white" if item == page else "rgba(255,255,255,0.45)"};{"border-bottom:2px solid #d95f4b;padding-bottom:3px;" if item == page else ""}padding:0 2px;">{item}</span>'
-    for item in nav_items
-)
-st.markdown(f"""
-<nav class="navbar">
-  <span class="navbar-logo">E. Marcouire</span>
-  <div class="navbar-links" style="pointer-events:none;">{active_items}</div>
-</nav>
-""", unsafe_allow_html=True)
-
-# Boutons fonctionnels superposés (invisibles visuellement)
+# ── Navbar : radio horizontal stylé en CSS ──
 st.markdown("""
 <style>
-.nav-btn-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -48px;
+/* Cache le label du radio */
+div[data-testid="stRadio"] > label { display: none !important; }
+
+/* Conteneur radio = notre navbar */
+div[data-testid="stRadio"] {
+    background: #1c1c1c;
     margin-left: calc(-1rem - 4px);
     margin-right: calc(-1rem - 4px);
-    padding-right: 40px;
-    height: 48px;
-    position: relative;
-    z-index: 100;
+    margin-top: -4px;
+    padding: 0 40px;
+    height: 56px;
+    display: flex !important;
+    align-items: center;
 }
-.nav-btn-row > div { display: flex; gap: 32px; align-items: center; }
-/* Rend les boutons complètement transparents */
-.nav-btn-row button {
+
+/* Flex horizontal pour les options */
+div[data-testid="stRadio"] > div {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0 !important;
+    align-items: center;
+    width: 100%;
+    height: 56px;
+}
+
+/* Logo à gauche via pseudo — on l'injecte autrement */
+/* Chaque option */
+div[data-testid="stRadio"] > div > label {
+    display: flex !important;
+    align-items: center !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2em !important;
+    text-transform: uppercase !important;
+    color: rgba(255,255,255,0.45) !important;
     background: transparent !important;
     border: none !important;
-    color: transparent !important;
-    box-shadow: none !important;
+    padding: 0 16px !important;
+    height: 56px !important;
     cursor: pointer !important;
-    padding: 0 8px !important;
-    height: 48px !important;
-    font-size: 11px !important;
-    min-width: 80px !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
 }
-.nav-btn-row button:hover { background: transparent !important; }
-.nav-btn-row button:focus { outline: none !important; box-shadow: none !important; }
+/* Cache le rond radio */
+div[data-testid="stRadio"] > div > label > div:first-child { display: none !important; }
+
+/* Option sélectionnée */
+div[data-testid="stRadio"] > div > label[data-selected="true"],
+div[data-testid="stRadio"] > div > label:has(input:checked) {
+    color: white !important;
+    border-bottom: 2px solid #d95f4b !important;
+}
+
+/* Push les items à droite — on pousse via margin-left auto sur le flex container */
+div[data-testid="stRadio"] > div > label:first-child {
+    margin-left: auto !important;
+}
 </style>
-<div class="nav-btn-row">
 """, unsafe_allow_html=True)
 
-_c1, _c2, _c3, _c4, _c5 = st.columns([4, 1, 1, 1, 1.5])
-for _col, _item in zip([_c2, _c3, _c4, _c5], nav_items):
-    with _col:
-        if st.button(_item, key=f"nav_{_item}"):
-            st.session_state.page = _item
-            st.rerun()
+# Logo séparé (avant le radio)
+st.markdown("""
+<div style="
+    background:#1c1c1c;
+    margin-left:calc(-1rem - 4px);
+    margin-right:calc(-1rem - 4px);
+    margin-top:-4px;
+    padding:0 40px;
+    height:56px;
+    display:flex;
+    align-items:center;
+    position:relative;
+    z-index:10;
+">
+  <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:white;letter-spacing:-0.01em;">
+    E. Marcouire
+  </span>
+</div>
+<style>
+  /* Remonte le radio pour coller au logo */
+  div[data-testid="stRadio"] { margin-top: -56px !important; }
+</style>
+""", unsafe_allow_html=True)
 
-st.markdown("</div>", unsafe_allow_html=True)
+selected = st.radio("nav", nav_items, index=nav_items.index(page),
+                    horizontal=True, label_visibility="collapsed", key="nav_radio")
+if selected != page:
+    st.session_state.page = selected
+    st.rerun()
 page = st.session_state.page
+
+st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════
