@@ -2,6 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
 st.set_page_config(
     page_title="Elodie Marcouire | Portfolio",
@@ -10,27 +11,24 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────
-# NAVIGATION
+# NAVIGATION — session_state, 3 pages
 # ─────────────────────────────────────────────
-nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
-page = st.query_params.get("page", "Accueil")
-if page not in nav_items:
-    page = "Accueil"
+nav_items = ["Accueil", "Cas pratique", "Projets"]
+if "page" not in st.session_state:
+    st.session_state.page = "Accueil"
+page = st.session_state.page
 
 # ─────────────────────────────────────────────
-# SIDEBAR
-# ─────────────────────────────────────────────
-
-# ─────────────────────────────────────────────
-# STYLE GLOBAL CONTENU
+# STYLE GLOBAL
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
-header { visibility: hidden; }
-footer { visibility: hidden; }
-#MainMenu { visibility: hidden; }
+header { visibility:hidden; }
+footer { visibility:hidden; }
+#MainMenu { visibility:hidden; }
+[data-testid="stSidebar"] { display:none; }
 
 :root {
     --cream: #f4f1ed;
@@ -41,72 +39,167 @@ footer { visibility: hidden; }
     --gold:  #c9a84c;
     --white: #ffffff;
 }
-.stApp { background-color: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+.stApp { background-color:var(--cream); color:var(--ink); font-family:'DM Sans',sans-serif; }
 
+/* Hero */
 .hero-wrap { text-align:center; padding:60px 20px 20px; border-bottom:1px solid #ddd; margin-bottom:48px; }
 .hero-name { font-family:'Playfair Display',serif; font-size:clamp(40px,8vw,88px); font-weight:700; letter-spacing:-0.02em; line-height:1; color:var(--ink); }
 .hero-subtitle { font-size:14px; font-weight:300; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); margin-top:14px; }
 .hero-accent { display:inline-block; width:40px; height:3px; background:var(--coral); margin:18px auto 0; }
 
+/* Sections */
 .section-label { font-size:11px; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--coral); margin-bottom:6px; }
 .section-title { font-family:'Playfair Display',serif; font-size:clamp(22px,4vw,30px); font-weight:700; color:var(--ink); margin-bottom:24px; }
 
+/* Cards */
 .bio-card { background:var(--white); border-radius:12px; padding:30px 32px; box-shadow:0 2px 24px rgba(0,0,0,0.06); line-height:1.85; font-size:15px; color:#333; }
 .bio-card strong { color:var(--ink); font-weight:500; }
 .bio-highlight { display:inline-block; background:#fdf3e7; color:var(--coral); font-weight:500; padding:1px 8px; border-radius:4px; }
 
-.projet-card { background:var(--white); border-radius:12px; padding:24px 26px; box-shadow:0 2px 16px rgba(0,0,0,0.05); margin-bottom:14px; border-left:4px solid var(--coral); }
+/* Projets */
+.projet-card {
+    background:var(--white); border-radius:12px; padding:24px 26px;
+    box-shadow:0 2px 16px rgba(0,0,0,0.05); margin-bottom:14px;
+    border-left:4px solid var(--coral);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+}
+.projet-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.10);
+}
 .projet-title { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--ink); margin-bottom:8px; }
+.projet-desc { font-size:14px; color:#555; line-height:1.7; margin-bottom:8px; }
+.projet-impact {
+    font-size:12px; font-weight:500; color:var(--sage);
+    background: rgba(122,158,126,0.08); border-radius:6px;
+    padding:6px 12px; display:inline-block; margin-top:6px;
+}
 .projet-tags { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
 .tag { font-size:10px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; padding:3px 9px; border-radius:20px; background:var(--cream); color:var(--muted); border:1px solid #ddd; }
-.map-intro { font-size:15px; color:var(--muted); max-width:600px; margin-bottom:20px; line-height:1.7; }
+
+/* Cas pratique steps */
+.step-card {
+    background:var(--white); border-radius:12px; padding:28px 32px;
+    box-shadow:0 2px 16px rgba(0,0,0,0.05); margin-bottom:20px;
+}
+.step-num {
+    display:inline-block; width:28px; height:28px; border-radius:50%;
+    background:var(--coral); color:white; font-size:12px; font-weight:700;
+    text-align:center; line-height:28px; margin-bottom:12px;
+}
+.step-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:var(--ink); margin-bottom:12px; }
+.insight-box {
+    background:#fdf3e7; border-left:3px solid var(--coral);
+    border-radius:0 8px 8px 0; padding:14px 18px;
+    font-size:14px; color:var(--ink); margin:10px 0;
+    line-height:1.7;
+}
+.reco-box {
+    background:#1c1c1c; border-radius:12px; padding:28px 32px;
+    color:white; margin-top:8px;
+}
+.reco-box h4 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:16px; color:white; }
+.reco-item { display:flex; gap:12px; margin-bottom:12px; font-size:14px; line-height:1.6; }
+.reco-dot { width:8px; height:8px; border-radius:50%; background:var(--coral); flex-shrink:0; margin-top:6px; }
+
+/* 30s card */
+.trente-grid {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:16px; margin-top:8px;
+}
+.trente-bloc {
+    background:var(--white); border-radius:10px; padding:20px 22px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+.trente-icon { font-size:20px; margin-bottom:8px; }
+.trente-label { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--coral); margin-bottom:4px; }
+.trente-val { font-size:14px; color:var(--ink); line-height:1.5; }
+
+/* Pourquoi moi */
+.pourquoi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:8px; }
+.pourquoi-card {
+    background:var(--white); border-radius:10px; padding:24px 22px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.05);
+    border-top:3px solid var(--ink);
+    transition: transform 0.2s ease;
+}
+.pourquoi-card:hover { transform:translateY(-3px); }
+.pourquoi-quote {
+    font-family:'Playfair Display',serif; font-size:13px;
+    font-style:italic; color:var(--muted); margin-bottom:12px;
+    line-height:1.6;
+}
+.pourquoi-title { font-size:13px; font-weight:500; color:var(--ink); }
+
+@media(max-width:700px){
+    .trente-grid { grid-template-columns:1fr; }
+    .pourquoi-grid { grid-template-columns:1fr; }
+}
 </style>
 """, unsafe_allow_html=True)
 
-
-# ═══════════════════════════════════════════════
-# NAVBAR — rendue avant chaque page
-# ═══════════════════════════════════════════════
+# ─────────────────────────────────────────────
+# NAVBAR — inline styles, session_state
+# ─────────────────────────────────────────────
 _links = ""
 for _item in nav_items:
     _active = _item == page
     _color = "white" if _active else "rgba(255,255,255,0.5)"
     _border = "border-bottom:2px solid #d95f4b;" if _active else "border-bottom:2px solid transparent;"
     _links += (
-        f'<a href="?page={_item}" style="' 
-        f'font-family:DM Sans,sans-serif;font-size:11px;font-weight:500;' 
-        f'letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;' 
-        f'color:{_color};padding:0 18px;height:56px;display:flex;' 
-        f'align-items:center;{_border}">{_item}</a>'
+        f'<span onclick="window.location.href=\'?nav={_item}\'" style="'
+        f'font-family:DM Sans,sans-serif;font-size:11px;font-weight:500;'
+        f'letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;cursor:pointer;'
+        f'color:{_color};padding:0 18px;height:56px;display:flex;align-items:center;{_border}">{_item}</span>'
     )
 
 st.markdown(f"""
 <style>.nav-scroll::-webkit-scrollbar{{display:none;}}</style>
 <div style="background:#1c1c1c;display:flex;align-items:center;
-justify-content:space-between;padding:0 20px 0 24px;height:56px;
-margin-bottom:0;flex-wrap:nowrap;">
-  <span style="font-family:Playfair Display,serif;font-size:16px;
-  font-weight:700;color:white;letter-spacing:-0.01em;white-space:nowrap;
-  margin-right:12px;flex-shrink:0;">E. Marcouire</span>
+justify-content:space-between;padding:0 20px 0 24px;height:56px;flex-wrap:nowrap;">
+  <span style="font-family:Playfair Display,serif;font-size:16px;font-weight:700;
+  color:white;letter-spacing:-0.01em;white-space:nowrap;margin-right:12px;flex-shrink:0;">E. Marcouire</span>
   <div class="nav-scroll" style="display:flex;align-items:center;height:56px;
-  overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:1;
-  scrollbar-width:none;">{_links}</div>
+  overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:1;scrollbar-width:none;">{_links}</div>
 </div>
 """, unsafe_allow_html=True)
 
-# Hint nav affiché sous la barre uniquement sur mobile
+# Boutons Streamlit invisibles pour la navigation (aucun style visible)
 st.markdown("""
 <style>
-  .nav-mobile-hint { display:none; }
-  @media(max-width:600px){ .nav-mobile-hint { display:block; } }
+.nav-buttons { display:flex; gap:0; margin-top:-56px; justify-content:flex-end;
+  padding-right:20px; height:56px; align-items:center; position:relative; z-index:10; }
+.nav-buttons > div > button {
+    opacity:0 !important; height:44px !important; min-width:80px !important;
+    cursor:pointer !important; border:none !important; background:transparent !important;
+    box-shadow:none !important;
+}
 </style>
-<div class="nav-mobile-hint" style="background:#1c1c1c;padding:2px 24px 6px;
+<div class="nav-buttons">
+""", unsafe_allow_html=True)
+
+_cols = st.columns([4] + [1]*len(nav_items))
+for _col, _item in zip(_cols[1:], nav_items):
+    with _col:
+        if st.button(_item, key=f"nav_{_item}"):
+            st.session_state.page = _item
+            st.rerun()
+
+st.markdown("</div>", unsafe_allow_html=True)
+page = st.session_state.page
+
+# Hint mobile sous la barre
+st.markdown("""
+<style>.nav-hint{display:none;}@media(max-width:600px){.nav-hint{display:block;}}</style>
+<div class="nav-hint" style="background:#1c1c1c;padding:2px 24px 5px;
 font-size:9px;color:rgba(255,255,255,0.3);text-align:right;">← défiler →</div>
 """, unsafe_allow_html=True)
 
-# ═══════════════════════════════════════════════
-# ACCUEIL
-# ═══════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════
+# PAGE ACCUEIL
+# ═══════════════════════════════════════════════════════
 if page == "Accueil":
 
     st.markdown("""
@@ -126,8 +219,11 @@ if page == "Accueil":
     <style>
       * { box-sizing:border-box; margin:0; padding:0; }
       html,body { background:#f4f1ed; overflow-x:hidden; }
-      .tl-scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-      .tl { display:flex; min-width:600px; padding:10px 8px 24px; }
+      .hint { display:none; font-family:'DM Sans',sans-serif; font-size:9px; color:#bbb; text-align:right; padding:0 4px 4px; }
+      @media(max-width:560px){ .hint{display:block;} }
+      .tl-scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+      .tl-scroll::-webkit-scrollbar { display:none; }
+      .tl { display:flex; min-width:620px; padding:10px 8px 24px; }
       .tl-item { flex:1; min-width:130px; position:relative; padding:26px 10px 16px; }
       .tl-item::before { content:""; position:absolute; top:19px; left:0; right:0; height:2px; background:#d9d5cf; }
       .tl-item:first-child::before { left:50%; }
@@ -140,10 +236,6 @@ if page == "Accueil":
       .future  .tl-year { color:#7a7a7a; font-style:italic; }
       .tl-role { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; color:#1c1c1c; text-align:center; margin-bottom:3px; }
       .tl-detail { font-family:'DM Sans',sans-serif; font-size:10px; color:#7a7a7a; text-align:center; line-height:1.5; }
-    </style>
-    <style>
-      .hint { display:none; font-family:'DM Sans',sans-serif; font-size:9px; color:#bbb; text-align:right; padding:0 8px 2px; }
-      @media(max-width:560px){ .hint { display:block; } }
     </style>
     <p class="hint">← défiler →</p>
     <div class="tl-scroll"><div class="tl">
@@ -206,7 +298,7 @@ if page == "Accueil":
         </script>
         """, height=280)
 
-    # ── DASHBOARD PRO ─────────────────────────
+    # ── DASHBOARDS ────────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown('<div class="section-label">Dashboard pro</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-title">Domofrance · ce que j&#39;ai produit</div>', unsafe_allow_html=True)
@@ -332,30 +424,248 @@ if page == "Accueil":
     <script>
     new Chart(document.getElementById('geo'),{type:'radar',data:{labels:["Afrique de l'ouest","Europe du sud","Europe du nord","Asie du sud-est","Maghreb"],datasets:[{data:[5,4,3,3,5],backgroundColor:'rgba(201,168,76,0.2)',borderColor:'#c9a84c',borderWidth:2,pointBackgroundColor:'#c9a84c',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:5,ticks:{display:false},grid:{color:'#e0dcd6'},angleLines:{color:'#e0dcd6'},pointLabels:{font:{family:'DM Sans',size:10},color:'#1c1c1c',padding:8}}}}});
     </script>
-    <script>
-    function resizeParent() {
-      const h = document.body.scrollHeight;
-      window.parent.postMessage({type:'streamlit:setFrameHeight', height: h}, '*');
-    }
-    window.addEventListener('load', resizeParent);
-    window.addEventListener('resize', resizeParent);
-    setTimeout(resizeParent, 100);
-    setTimeout(resizeParent, 600);
-    </script>
     """, height=670, scrolling=True)
+
+    # ── EN 30 SECONDES ────────────────────────
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<div class="section-label">Résumé</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">En 30 secondes</div>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="trente-grid">
+      <div class="trente-bloc">
+        <div class="trente-icon">⚙️</div>
+        <div class="trente-label">Ce que je fais</div>
+        <div class="trente-val">Transformer la donnée brute en décisions business — de la collecte à la visualisation.</div>
+      </div>
+      <div class="trente-bloc">
+        <div class="trente-icon">🔍</div>
+        <div class="trente-label">Ce que j'aime</div>
+        <div class="trente-val">Explorer un dataset inconnu, comprendre un contexte métier, structurer ce qui semble flou.</div>
+      </div>
+      <div class="trente-bloc">
+        <div class="trente-icon">🛠️</div>
+        <div class="trente-label">Mes outils</div>
+        <div class="trente-val">Power BI · SQL · Snowflake · Talend · Python · DataGalaxy</div>
+      </div>
+      <div class="trente-bloc">
+        <div class="trente-icon">🎯</div>
+        <div class="trente-label">Ce que je cherche</div>
+        <div class="trente-val">Un poste Data Analyst ou BI où la donnée sert vraiment à quelque chose.</div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── POURQUOI MOI ──────────────────────────
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<div class="section-label">Valeur ajoutée</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Pourquoi moi ?</div>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="pourquoi-grid">
+      <div class="pourquoi-card">
+        <div class="pourquoi-quote">"Je ne livre pas des graphiques, je livre des réponses à des questions métier."</div>
+        <div class="pourquoi-title">📈 Vision business</div>
+        <p style="font-size:13px;color:#666;margin-top:8px;line-height:1.6;">
+          Grâce à mes expériences à Domofrance, j'ai appris à traduire des besoins flous en KPIs actionnables. Je pense en termes d'impact, pas de technique.
+        </p>
+      </div>
+      <div class="pourquoi-card">
+        <div class="pourquoi-quote">"Un dataset que je ne comprends pas encore, c'est juste un problème que je n'ai pas encore résolu."</div>
+        <div class="pourquoi-title">🧠 Curiosité naturelle</div>
+        <p style="font-size:13px;color:#666;margin-top:8px;line-height:1.6;">
+          Grandir dans plusieurs pays m'a appris à observer avant de conclure. Cette posture d'analyse, je l'applique à chaque dataset.
+        </p>
+      </div>
+      <div class="pourquoi-card">
+        <div class="pourquoi-quote">"La donnée n'a de valeur que si quelqu'un la comprend."</div>
+        <div class="pourquoi-title">🗣️ Vulgarisation</div>
+        <p style="font-size:13px;color:#666;margin-top:8px;line-height:1.6;">
+          Je sais parler data aux non-data. Construire un dashboard, c'est bien — s'assurer qu'il est utilisé, c'est mieux.
+        </p>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
 
-# ═══════════════════════════════════════════════
-# PROJETS
-# ═══════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════
+# PAGE CAS PRATIQUE
+# ═══════════════════════════════════════════════════════
+elif page == "Cas pratique":
+
+    st.markdown("""
+    <div class="hero-wrap" style="padding:40px 20px 10px;">
+        <div class="hero-name" style="font-size:clamp(30px,5vw,56px);">Cas pratique</div>
+        <div class="hero-subtitle">Analyse de la performance locative · simulation data analyst</div>
+        <div class="hero-accent"></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ── ÉTAPE 1 : CONTEXTE ────────────────────
+    st.markdown("""
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">Contexte métier</div>
+      <p style="font-size:15px;color:#444;line-height:1.8;">
+        Un bailleur social souhaite <strong>réduire le taux d'impayés locataires</strong>
+        sur son parc de 12 000 logements. La direction demande une analyse pour comprendre
+        <em>quels profils de locataires sont les plus à risque</em>, et <em>à quelle période
+        de l'année les impayés explosent</em>. L'objectif final : alimenter un tableau de bord
+        de pilotage mensuel pour les équipes recouvrement.
+      </p>
+      <div class="insight-box">
+        🎯 <strong>Question business :</strong> Peut-on anticiper les impayés plutôt que de les subir ?
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── ÉTAPE 2 : DONNÉES ─────────────────────
+    st.markdown("""
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">Données disponibles</div>
+      <p style="font-size:14px;color:#666;margin-bottom:16px;">
+        Dataset simulé · 200 locataires · période jan 2024 – déc 2025
+      </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    import numpy as np
+    np.random.seed(42)
+    n = 200
+    df = pd.DataFrame({
+        "Locataire": [f"LOC-{1000+i}" for i in range(n)],
+        "Ancienneté (ans)": np.random.randint(1, 15, n),
+        "Loyer mensuel (€)": np.random.choice([400,500,600,700,800,900], n),
+        "Mois impayé": np.random.choice(
+            ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"],
+            n, p=[0.12,0.08,0.07,0.07,0.06,0.06,0.06,0.10,0.08,0.08,0.09,0.13]
+        ),
+        "Montant impayé (€)": np.random.randint(200, 2500, n),
+        "Taux d'effort (%)": np.random.randint(25, 55, n),
+    })
+    st.dataframe(
+        df.head(10),
+        use_container_width=True,
+        hide_index=True
+    )
+    st.caption("Aperçu · 10 premières lignes sur 200")
+
+    # ── ÉTAPE 3 : EXPLORATION ─────────────────
+    st.markdown("""
+    <div class="step-card" style="margin-top:20px;">
+      <div class="step-num">3</div>
+      <div class="step-title">Exploration des données</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2, gap="large")
+
+    with col1:
+        mois_order = ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"]
+        mois_counts = df["Mois impayé"].value_counts().reindex(mois_order).reset_index()
+        mois_counts.columns = ["Mois","Nombre d'impayés"]
+        fig1 = px.bar(mois_counts, x="Mois", y="Nombre d'impayés",
+                      color_discrete_sequence=["#d95f4b"],
+                      title="Impayés par mois")
+        fig1.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="DM Sans", color="#1c1c1c", size=12),
+            title_font=dict(family="Playfair Display", size=16),
+            showlegend=False, height=320,
+            xaxis=dict(gridcolor="#f0ece8"),
+            yaxis=dict(gridcolor="#f0ece8")
+        )
+        st.plotly_chart(fig1, use_container_width=True)
+
+    with col2:
+        fig2 = px.scatter(df, x="Taux d'effort (%)", y="Montant impayé (€)",
+                          color="Loyer mensuel (€)",
+                          color_continuous_scale=["#f4d4cf","#d95f4b","#8b1a0a"],
+                          title="Montant impayé vs taux d'effort",
+                          opacity=0.65)
+        fig2.update_layout(
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="DM Sans", color="#1c1c1c", size=12),
+            title_font=dict(family="Playfair Display", size=16),
+            height=320,
+            xaxis=dict(gridcolor="#f0ece8"),
+            yaxis=dict(gridcolor="#f0ece8"),
+            coloraxis_colorbar=dict(title="Loyer €", thickness=12)
+        )
+        st.plotly_chart(fig2, use_container_width=True)
+
+    # ── ÉTAPE 4 : ANALYSE ─────────────────────
+    st.markdown("""
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-title">Analyse</div>
+      <div class="insight-box">
+        📌 <strong>Observation 1 :</strong> Les impayés se concentrent sur janvier et décembre —
+        deux mois de forte pression financière (fêtes, chauffage, début d'année).
+        La saisonnalité est un signal fort à intégrer dans le modèle de pilotage.
+      </div>
+      <div class="insight-box" style="margin-top:10px;">
+        📌 <strong>Observation 2 :</strong> Au-delà de 40% de taux d'effort, les montants
+        impayés augmentent significativement. Ce seuil est cohérent avec les recommandations
+        du secteur du logement social.
+      </div>
+      <div class="insight-box" style="margin-top:10px;background:#f0f5f1;border-left-color:#7a9e7e;">
+        💡 <strong>Insight :</strong> La combinaison taux d'effort élevé + mois de décembre/janvier
+        constitue un <em>profil à risque cumulé</em>. Ce segment représente ~18% du parc
+        mais génère ~35% du montant total des impayés.
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── ÉTAPE 5 : RECOMMANDATION ──────────────
+    st.markdown("""
+    <div class="step-card">
+      <div class="step-num">5</div>
+      <div class="step-title">Recommandation</div>
+      <div class="reco-box">
+        <h4>Ce que je ferais en tant que data analyst</h4>
+        <div class="reco-item">
+          <div class="reco-dot"></div>
+          <div><strong>Créer un indicateur de risque mensuel</strong> combinant taux d'effort,
+          historique d'impayés et saisonnalité — alimenté automatiquement depuis Snowflake.</div>
+        </div>
+        <div class="reco-item">
+          <div class="reco-dot"></div>
+          <div><strong>Construire un dashboard Power BI</strong> avec deux vues :
+          vue stratégique (direction) et vue opérationnelle (équipes recouvrement),
+          avec alertes sur les locataires à risque élevé.</div>
+        </div>
+        <div class="reco-item">
+          <div class="reco-dot"></div>
+          <div><strong>Proposer un plan d'action préventif</strong> : contacter les profils
+          à risque en novembre pour anticiper janvier — simple à mettre en place,
+          fort impact sur le taux de recouvrement.</div>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.1);
+        font-size:12px;color:rgba(255,255,255,0.45);">
+          Ce cas s'inspire de ma mission chez Domofrance · données simulées
+        </div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+
+# ═══════════════════════════════════════════════════════
+# PAGE PROJETS
+# ═══════════════════════════════════════════════════════
 elif page == "Projets":
 
     st.markdown("""
     <div class="hero-wrap" style="padding:40px 20px 10px;">
         <div class="hero-name" style="font-size:clamp(34px,6vw,64px);">Projets</div>
-        <div class="hero-subtitle">Études de cas & réalisations</div>
+        <div class="hero-subtitle">Réalisations · Impact · Méthode</div>
         <div class="hero-accent"></div>
     </div>
     """, unsafe_allow_html=True)
@@ -363,9 +673,27 @@ elif page == "Projets":
     st.markdown("<br>", unsafe_allow_html=True)
 
     projets = [
-        {"title": "Dashboard Impayés Locataires — Domofrance", "description": "Tableau de bord Power BI pour le suivi des impayés locataires. Modélisation Snowflake, pipeline Talend, 3 niveaux de granularité. Projet de bout-en-bout.", "tags": ["Power BI", "Snowflake", "Talend", "SQL"], "color": "#d95f4b"},
-        {"title": "Data Mart — Projet structurant", "description": "Conception et implémentation d'un Data Mart sur Snowflake. Modélisation en étoile, documentation sur DataGalaxy, intégration dans la gouvernance des données.", "tags": ["Snowflake", "SQL", "DataGalaxy", "Modélisation"], "color": "#7a9e7e"},
-        {"title": "Analyse exploratoire — Données ouvertes", "description": "Exploration d'un jeu de données public avec Python. Nettoyage, détection d'outliers, visualisation des corrélations.", "tags": ["Python", "Pandas", "Seaborn", "EDA"], "color": "#c9a84c"},
+        {
+            "title": "Dashboard Impayés Locataires — Domofrance",
+            "description": "Tableau de bord Power BI pour le suivi des impayés locataires en place. Modélisation Snowflake, pipeline Talend, 3 niveaux de granularité (national, agence, locataire). Projet structurant de bout-en-bout.",
+            "impact": "Visibilité temps réel sur 12 000 logements · rafraîchissement automatique mensuel",
+            "tags": ["Power BI", "Snowflake", "Talend", "SQL"],
+            "color": "#d95f4b"
+        },
+        {
+            "title": "Data Mart — Modélisation Domofrance",
+            "description": "Conception et implémentation d'un Data Mart sur Snowflake. Modélisation en étoile, ETL Talend, documentation sur DataGalaxy. Intégration dans la gouvernance des données de l'entreprise.",
+            "impact": "Réduction de la redondance des données · source de vérité unifiée pour 3 équipes",
+            "tags": ["Snowflake", "SQL", "DataGalaxy", "ETL", "Talend"],
+            "color": "#7a9e7e"
+        },
+        {
+            "title": "Analyse exploratoire — Données ouvertes",
+            "description": "Exploration d'un jeu de données public avec Python. Nettoyage complet, détection d'outliers, visualisation des corrélations, synthèse des insights en rapport automatisé.",
+            "impact": "Pipeline EDA réutilisable · patterns identifiés en < 2h sur dataset brut",
+            "tags": ["Python", "Pandas", "Seaborn", "EDA"],
+            "color": "#c9a84c"
+        },
     ]
 
     for p in projets:
@@ -373,68 +701,12 @@ elif page == "Projets":
         st.markdown(f"""
         <div class="projet-card" style="border-left-color:{p['color']};">
             <div class="projet-title">{p['title']}</div>
-            <div style="font-size:14px;color:#555;line-height:1.7;">{p['description']}</div>
+            <div class="projet-desc">{p['description']}</div>
+            <div class="projet-impact">⚡ Impact : {p['impact']}</div>
             <div class="projet-tags">{tags_html}</div>
         </div>
         """, unsafe_allow_html=True)
 
-    st.info("✦ D'autres projets arrivent bientôt.")
-
-
-# ═══════════════════════════════════════════════
-# VOYAGES
-# ═══════════════════════════════════════════════
-elif page == "Voyages":
-
-    st.markdown("""
-    <div class="hero-wrap" style="padding:40px 20px 10px;">
-        <div class="hero-name" style="font-size:clamp(34px,6vw,64px);">Voyages</div>
-        <div class="hero-subtitle">9 pays · 4 continents · 1 curiosité constante</div>
-        <div class="hero-accent"></div>
-    </div>
-    """, unsafe_allow_html=True)
-
     st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown('<p class="map-intro">Grandir en changeant de pays, c\'est apprendre à observer des systèmes très différents.</p>', unsafe_allow_html=True)
-
-    travel = pd.DataFrame({
-        "country": ["Mauritanie","Italie","Portugal","Espagne","Angleterre","Sénégal","Maroc","Malte","Thaïlande"],
-        "lat":  [20.25,41.90,38.72,40.41,51.50,14.69,33.57,35.90,13.75],
-        "lon":  [-10.32,12.49,-9.13,-3.70,-0.12,-17.44,-7.59,14.51,100.50],
-        "note": ["Enfance · 3 ans","Voyage · Rome & Florence","Voyage · Lisbonne","Voyage · Barcelone","Voyage · Londres","Enfance · Dakar","Enfance · Casablanca","Voyage · La Valette","Voyage · Bangkok"]
-    })
-
-    fig = px.scatter_geo(travel, lat="lat", lon="lon", hover_name="country",
-                         hover_data={"note":True,"lat":False,"lon":False}, projection="natural earth")
-    fig.update_traces(marker=dict(size=12, color="#d95f4b", opacity=0.85, line=dict(width=1.5, color="#fff")))
-    fig.update_layout(paper_bgcolor="rgba(0,0,0,0)",
-        geo=dict(bgcolor="rgba(0,0,0,0)", showland=True, landcolor="#e8e4de",
-                 showocean=True, oceancolor="#dce8f0", showcoastlines=True,
-                 coastlinecolor="#c5bfb8", showframe=False, showcountries=True, countrycolor="#cec8c1"),
-        margin=dict(t=10,b=10,l=0,r=0), height=480,
-        font=dict(color="#1c1c1c", family="DM Sans"))
-    st.plotly_chart(fig, use_container_width=True)
-
-
-# ═══════════════════════════════════════════════
-# EXPÉRIMENTATIONS
-# ═══════════════════════════════════════════════
-elif page == "Expérimentations":
-
-    st.markdown("""
-    <div class="hero-wrap" style="padding:40px 20px 10px;">
-        <div class="hero-name" style="font-size:clamp(34px,6vw,64px);">Expérimentations</div>
-        <div class="hero-subtitle">Analyses · Curiosités · Visualisations</div>
-        <div class="hero-accent"></div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("""
-    <div class="bio-card" style="max-width:600px;">
-        <p>Cette section est un <strong>laboratoire ouvert</strong> — des analyses rapides,
-        des visualisations expérimentales, des datasets trouvés par hasard.</p>
-        <p style="color:#7a7a7a;font-size:13px;margin-top:12px;">
-        Prochainement : analyse de mes habitudes de lecture · visualisation du coût de la vie · mini-projet NLP.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.info("✦ D'autres projets arrivent bientôt — en cours de documentation.")
+    st.markdown("<br><br>", unsafe_allow_html=True)
