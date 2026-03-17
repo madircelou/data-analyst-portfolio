@@ -82,7 +82,12 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
-header, footer, #MainMenu { visibility: hidden; }
+header { visibility: hidden; }
+footer { visibility: hidden; }
+#MainMenu { visibility: hidden; }
+/* Garde le bouton d'ouverture du sidebar visible */
+button[data-testid="baseButton-header"] { visibility: visible !important; }
+[data-testid="collapsedControl"] { visibility: visible !important; }
 
 :root {
     --cream: #f4f1ed;
