@@ -6,74 +6,20 @@ import plotly.express as px
 st.set_page_config(
     page_title="Elodie Marcouire | Portfolio",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # ─────────────────────────────────────────────
 # NAVIGATION
 # ─────────────────────────────────────────────
 nav_items = ["Accueil", "Projets", "Voyages", "Expérimentations"]
-if "page" not in st.session_state:
-    st.session_state.page = "Accueil"
+page = st.query_params.get("page", "Accueil")
+if page not in nav_items:
+    page = "Accueil"
 
 # ─────────────────────────────────────────────
 # SIDEBAR
 # ─────────────────────────────────────────────
-st.markdown("""
-<style>
-[data-testid="stSidebar"] { background-color: #1c1c1c !important; }
-[data-testid="stSidebarContent"] { padding-top: 28px !important; }
-section[data-testid="stSidebarNav"] { display: none !important; }
-
-/* Logo */
-.sidebar-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; font-weight: 700;
-    color: white;
-    padding: 0 20px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin-bottom: 20px;
-}
-/* Radio labels */
-[data-testid="stSidebar"] .stRadio > label { display: none !important; }
-[data-testid="stSidebar"] .stRadio div[role="radiogroup"] {
-    gap: 0 !important;
-}
-[data-testid="stSidebar"] .stRadio label {
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.18em !important;
-    text-transform: uppercase !important;
-    color: rgba(255,255,255,0.5) !important;
-    padding: 12px 20px !important;
-    border-radius: 0 !important;
-    width: 100% !important;
-    border-left: 3px solid transparent !important;
-}
-[data-testid="stSidebar"] .stRadio label > div:first-child { display: none !important; }
-[data-testid="stSidebar"] .stRadio label:has(input:checked) {
-    color: white !important;
-    border-left-color: #d95f4b !important;
-    background: rgba(255,255,255,0.05) !important;
-}
-[data-testid="stSidebar"] .stRadio label:hover {
-    color: white !important;
-    background: rgba(255,255,255,0.04) !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-with st.sidebar:
-    st.markdown('<div class="sidebar-logo">E. Marcouire</div>', unsafe_allow_html=True)
-    sel = st.radio("nav", nav_items,
-                   index=nav_items.index(st.session_state.page),
-                   label_visibility="collapsed")
-    if sel != st.session_state.page:
-        st.session_state.page = sel
-        st.rerun()
-
-page = st.session_state.page
 
 # ─────────────────────────────────────────────
 # STYLE GLOBAL CONTENU
@@ -85,9 +31,6 @@ st.markdown("""
 header { visibility: hidden; }
 footer { visibility: hidden; }
 #MainMenu { visibility: hidden; }
-/* Garde le bouton d'ouverture du sidebar visible */
-button[data-testid="baseButton-header"] { visibility: visible !important; }
-[data-testid="collapsedControl"] { visibility: visible !important; }
 
 :root {
     --cream: #f4f1ed;
@@ -120,6 +63,21 @@ button[data-testid="baseButton-header"] { visibility: visible !important; }
 </style>
 """, unsafe_allow_html=True)
 
+
+# ═══════════════════════════════════════════════
+# NAVBAR — rendue avant chaque page
+# ═══════════════════════════════════════════════
+_links = ""
+for _item in nav_items:
+    _cls = "nav-link active" if _item == page else "nav-link"
+    _links += f'<a class="{_cls}" href="?page={_item}">{_item}</a>'
+
+st.markdown(f"""
+<div class="nav-bar">
+  <span class="nav-logo">E. Marcouire</span>
+  <div class="nav-links">{_links}</div>
+</div>
+""", unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════
 # ACCUEIL
